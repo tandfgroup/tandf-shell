@@ -63,6 +63,7 @@ aws_ecr_url () {
 #######################################
 # AWS S3 Upload, or exit
 # Globals:
+#   aws
 #   run_or_fail
 # Arguments:
 #   1 - LOCAL_FILE_NAME
@@ -80,9 +81,45 @@ aws_s3_upload () {
 
   require_bin "aws"
 
+  require_func "run_or_fail"
+
   require_var "LOCAL_FILE_NAME"
   require_var "BUCKET"
 
-  cmd="aws s3 cp $LOCAL_FILE_NAME s3://$BUCKET/$REMOTE_FILE_NAME $OPTS"
-  run_or_fail "$cmd"
+  run_or_fail "aws s3 cp ${LOCAL_FILE_NAME} s3://${BUCKET}/${REMOTE_FILE_NAME} ${OPTS}"
+}
+
+#######################################
+# AWS S3 Upload, with ZIP compression, or exit
+# Globals:
+#   aws_s3_upload
+#   run_or_fail
+#   zip
+# Arguments:
+#   1 - SRC_PATH
+#   2 - LOCAL_FILE_NAME
+#   3 - BUCKET name/domain
+#   4 - [optional] REMOTE_FILE_NAME || LOCAL_FILE_NAME
+#   5 - [optional] OPTS
+# Returns:
+#   None
+#######################################
+aws_s3_zip_upload () {
+  SRC_PATH="${1}"
+  LOCAL_FILE_NAME="${2}"
+  BUCKET="${3}"
+  REMOTE_FILE_NAME="${4}" || "$LOCAL_FILE_NAME"
+  OPTS="${5}" || ""
+
+  require_bin "zip"
+
+  require_func "aws_s3_upload"
+  require_func "run_or_fail"
+
+  require_var "SRC_PATH"
+  require_var "LOCAL_FILE_NAME"
+  require_var "BUCKET"
+
+  run_or_fail "zip ${LOCAL_FILE_NAME} ${SRC_PATH}"
+  run_or_fail "aws_s3_upload ${LOCAL_FILE_NAME} ${S3_BUCKET} ${REMOTE_FILE_NAME} ${OPTS}"
 }
