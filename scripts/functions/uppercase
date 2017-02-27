@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# convert string to uppercase
+
+uppercase () {
+
+  echo "$1" | sed "y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/"
+
+}
