@@ -120,8 +120,8 @@ export require_bin
 require_var () {
   var_name=${1}
   var_value=${!var_name}
-  if [ -z "$var_value" ]; then
-    msg=$2 || "\`\$$var_name\` was empty! ($var_value)"
+  if [ -v "$var_name" ]; then
+    msg=$2 || "\`\$$var_name\` was not set! ($var_value)"
     sh_fail "$msg"
   fi
   sh_success "\`\$$var_name\` = \"$var_value\""
