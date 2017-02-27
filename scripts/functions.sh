@@ -9,7 +9,7 @@ export TFSHELL_FUNCTIONS
 # for file in ./functions/{extract,lowercase}; do
 for file in $(find -H "$TFSHELL_FUNCTIONS" -maxdepth 2 -name '[A-Za-z0-9\-\_]*'); do
   # shellcheck source=/dev/null disable=SC2163
-  [ -r "$file" ] && [ -f "$file" ] && . "$file" && export "$file"
+  [ -r "$file" ] && [ -f "$file" ] && . "$file" && export $(basename $file)
 done
 unset file
 
