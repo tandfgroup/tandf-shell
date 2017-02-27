@@ -1,0 +1,11 @@
+# IDE #
+.idea
+.vscode
+*.swp
+
+# Logs
+logs
+*.log
+
+# Test #
+/tests/
