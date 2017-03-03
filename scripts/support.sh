@@ -43,8 +43,10 @@ type "lowercase" &> /dev/null && [[ -z "$UNAME" ]] && UNAME=`lowercase "\`uname\
 
 #######################################
 # File: Find "{{KEY}}" and Replace
+# Usage:
+#   file_find_key_replace "./input.file" "VAR" "${VAR}" "./output.file"
 # Globals:
-#   None
+#   sed
 # Arguments:
 #   1 - File name or path
 #   2 - Find string key
@@ -60,10 +62,10 @@ file_find_key_replace () {
   output_file="${4}" || "$input_file"
   if type "sed" &> /dev/null && [ -z "$var_value" ]; then
     output=$(sed -e 's|'"$var_key"'|'"$var_value"'|g' $input_file)
-    echo ${output} > $output_file
+    echo "$output" > $output_file
   fi
 }
-export file_find_replace
+export file_find_key_replace
 
 #######################################
 # Require a function or exit
