@@ -68,6 +68,35 @@ file_find_key_replace () {
 export file_find_key_replace
 
 #######################################
+#######################################
+# Get ENV variable, with prefix, or default
+# Globals:
+#   None
+# Arguments:
+#   1 - Variable name
+#   2 - Variable default value
+#   3 - Variable prefix (for alt lookup)
+# Returns:
+#   Variable value
+#######################################
+get_env_var () {
+  var_name=${1}
+  var_value=${!1}
+  declare "$var_name"="${var_value}"
+
+  if [ ! -z "${3}" ]; then
+    prefixvar=${3}$1
+    eval prefixvar=\$$prefixvar
+    [ ! -z ${prefixvar+x} ] && declare "$var_name"="${prefixvar}"
+  fi
+
+  [ -z "${!var_name}" ] && [ ! -z ${2+x} ] && declare "$var_name"="${2}"
+
+  echo "${!var_name}"
+}
+export get_env_var
+
+#######################################
 # Require a function or exit
 # Globals:
 #   sh_fail
