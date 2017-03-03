@@ -68,6 +68,39 @@ file_find_key_replace () {
 export file_find_key_replace
 
 #######################################
+# File: Find MANY "{{KEYS}}" and Replace
+# Usage:
+#   file_find_keys_replace VARS[@] "./input.file" "./output.file"
+# Globals:
+#   sed
+# Arguments:
+#   1 - File name or path
+#   2 - Find string key
+#   3 - Replace string value
+#   4 - [optional] Output file name or path
+# Returns:
+#   None
+#######################################
+file_find_keys_replace () {
+  declare -a var_keys=("${!1}")
+  input_file="${2}"
+  output_file="${3}"
+  output=
+  if [ ! -e $input_file ]; then
+    sh_error "arg[2] - Input file name/path is required" && exit 2
+  else
+    output=$(cat $input_file)
+    for var in "${var_keys[@]}"; do
+      if [ ! -z ${var+x} ] && type "sed" &> /dev/null; then
+        output=$(echo "$output" | sed -e 's|'"{{${var}}}"'|'"${!var}"'|g')
+      fi
+    done
+  fi
+  [ -z $output_file ] && output_file="$input_file"
+  echo "$output" > $output_file
+}
+export file_find_keys_replace
+
 #######################################
 # Get ENV variable, with prefix, or default
 # Globals:
