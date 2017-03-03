@@ -143,7 +143,8 @@ require_func () {
   if type "$1" &> /dev/null; then
     : # silent pass if function exists
   else
-    msg=$2 || "\`$1\` function was not found!"
+    msg="\`$1\` function was not found!"
+    [ ! -z "$2" ] && msg=${2}
     sh_fail "$msg"
   fi
 }
@@ -164,7 +165,8 @@ require_bin () {
   if type "$1" &> /dev/null; then
     sh_success "\`$1\` $($1 --version) installed: $(which $1)"
   else
-    msg=$2 || "\`$1\` was not found!"
+    msg="\`$1\` was not found!"
+    [ ! -z "$2" ] && msg=${2}
     sh_fail "$msg"
   fi
 }
@@ -184,8 +186,11 @@ export require_bin
 require_var () {
   var_name=${1}
   var_value=${!var_name}
-  if [ -v "$var_name" ]; then
-    msg=$2 || "\`\$$var_name\` was not set! ($var_value)"
+  protected="secret|SECRET|password|PASSWORD"
+  [[ $var_name =~ $protected ]] && var_value="***"
+  if [ -z "$var_value" ]; then
+    msg="\`\$$var_name\` was empty! ($var_value)"
+    [ ! -z "$2" ] && msg=${2}
     sh_fail "$msg"
   fi
   sh_success "\`\$$var_name\` = \"$var_value\""
@@ -207,7 +212,8 @@ run_or_fail () {
   sh_info "Running (\`$1\`), or failing..."
   $1
   if [ $? -ne 0 ]; then
-    msg=$2 || "Failed while running (\`$1\`)"
+    msg="Failed while running (\`$1\`)"
+    [ ! -z "$2" ] && msg=${2}
     sh_fail "$msg"
   fi
 }
