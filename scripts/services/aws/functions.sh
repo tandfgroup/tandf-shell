@@ -37,7 +37,7 @@ aws_docker_push () {
 #######################################
 # AWS ECR URL
 # Globals:
-#   aws_docker_push
+#   None
 # Arguments:
 #   1 - AWS_ACCOUNT_ID
 #   2 - AWS_ECR_IMAGE_NAME
@@ -52,12 +52,14 @@ aws_ecr_url () {
   AWS_ECR_IMAGE_TAG="${3}" || "latest"
   AWS_REGION="${4}" || "us-east-1"
 
-  require_var "AWS_ACCOUNT_ID"
-  require_var "AWS_ECR_IMAGE_NAME"
+  AWS_ECR_URL=""
 
-  AWS_ECR_HOST="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+  if [ ! -z $AWS_ACCOUNT_ID ] && [ ! -z $AWS_ECR_IMAGE_NAME ]; then
+    AWS_ECR_HOST="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+    AWS_ECR_URL="$AWS_ECR_HOST/$AWS_ECR_IMAGE_NAME:$AWS_ECR_IMAGE_TAG"
+  fi
 
-  echo "${AWS_ECR_HOST}/$AWS_ECR_IMAGE_NAME:${AWS_ECR_IMAGE_TAG}"
+  echo "${AWS_ECR_URL}"
 }
 
 #######################################
