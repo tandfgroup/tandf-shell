@@ -120,7 +120,7 @@ get_env_var () {
   if [ ! -z "${3}" ]; then
     prefixvar=${3}$1
     eval prefixvar=\$$prefixvar
-    [ ! -z ${prefixvar+x} ] && declare "$var_name"="${prefixvar}"
+    [ ! -z "${prefixvar}" ] && declare "$var_name"="${prefixvar}"
   fi
 
   [ -z "${!var_name}" ] && [ ! -z ${2+x} ] && declare "$var_name"="${2}"
