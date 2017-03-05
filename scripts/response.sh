@@ -121,9 +121,9 @@ sh_fail () {
 export sh_fail
 
 sh_heading () {
-  printf "${ClearNewLine}\n         ${Bold}${Underline}$1${Reset} \n\n"
+  printf "${ClearNewLine}\n\n${Bold}${IMagenta}❯❯❯❯❯❯❯❯${Reset} ${Bold}${ICyan}${Underline}$1${Reset} ${Bold}${IMagenta}❯${IYellow}❯${IGreen}❯${Reset}\n\n"
 }
-export sh_head
+export sh_heading
 
 sh_info () {
   printf "${ClearNewLine} [${Blue} .. ${Reset}]  $1 \n"
@@ -144,6 +144,11 @@ sh_text () {
   printf "${ClearNewLine}         $1 \n"
 }
 export sh_text
+
+sh_code () {
+  printf "${ClearNewLine}${Dim}$1${Reset} \n"
+}
+export sh_code
 
 sh_user () {
   printf "${ClearNewLine} [${Yellow} ?? ${Reset}]  $1 \n"
