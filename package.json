@@ -11,5 +11,10 @@
   },
   "bugs": {
     "url": "https://github.com/tandfgroup/tandf-shell/issues"
+  },
+  "scripts": {
+    "version:major": "npm version major -m \"Update package version to '%s'\"",
+    "version:minor": "npm version minor -m \"Update package version to '%s'\"",
+    "version:patch": "npm version patch -m \"Update package version to '%s'\""
   }
 }
