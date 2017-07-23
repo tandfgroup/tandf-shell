@@ -130,6 +130,36 @@ get_env_var () {
 export get_env_var
 
 #######################################
+# Output variables
+# Arguments:
+#   * - Variable names
+# Returns:
+#   Variable keys+values
+#######################################
+output_vars () {
+  for var in "$@"; do
+    echo "${var}=\"${!var}\"";
+  done
+}
+export output_vars
+
+#######################################
+# Output variables as JSON
+# Arguments:
+#   * - Variable names
+# Returns:
+#   Stringified JSON object with variable keys+values
+#######################################
+output_vars_json () {
+  echo "{"
+  for var in "$@"; do
+    echo "  \"${var}\": \"${!var}\"";
+  done
+  echo "}"
+}
+export output_vars_json
+
+#######################################
 # Require a function or exit
 # Globals:
 #   sh_fail
