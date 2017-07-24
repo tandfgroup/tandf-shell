@@ -104,59 +104,59 @@ export BGIDefault="${SWITCH}0;109m" # Default
 # ------------------------------------------------------------------------------
 
 sh_alert () {
-  printf "${ClearNewLine} [${Yellow} !! ${Reset}]  ${Yellow}$1${Reset} \n"
+  printf "${ClearNewLine} [${Yellow} !! ${Reset}]  ${Yellow}${1:-}${Reset} \n"
 }
 export sh_alert
 
 sh_error () {
-  printf "${ClearNewLine} [${Red} ER ${Reset}]  ${Red}$1${Reset} \n"
+  printf "${ClearNewLine} [${Red} ER ${Reset}]  ${Red}${1:-}${Reset} \n"
 }
 export sh_error
 
 sh_fail () {
-  printf "${ClearNewLine} [${Red}FAIL${Reset}]  ${Red}$1${Reset} \n"
+  printf "${ClearNewLine} [${Red}FAIL${Reset}]  ${Red}${1:-}${Reset} \n"
   echo ''
   exit 3
 }
 export sh_fail
 
 sh_heading () {
-  printf "${ClearNewLine}\n\n${Bold}${IMagenta}❯❯❯❯❯❯❯❯${Reset} ${Bold}${ICyan}${Underline}$1${Reset} ${Bold}${IMagenta}❯${IYellow}❯${IGreen}❯${Reset}\n\n"
+  printf "${ClearNewLine}\n\n${Bold}${IMagenta}❯❯❯❯❯❯❯❯${Reset} ${Bold}${ICyan}${Underline}${1:-}${Reset} ${Bold}${IMagenta}❯${IYellow}❯${IGreen}❯${Reset}\n\n"
 }
 export sh_heading
 
 sh_info () {
-  printf "${ClearNewLine} [${Blue} .. ${Reset}]  $1 \n"
+  printf "${ClearNewLine} [${Blue} .. ${Reset}]  ${1:-} \n"
 }
 export sh_info
 
 sh_note () {
-  printf "${ClearNewLine} [${Cyan} ** ${Reset}]  $1 \n"
+  printf "${ClearNewLine} [${Cyan} ** ${Reset}]  ${1:-} \n"
 }
 export sh_note
 
 sh_success () {
-  printf "${ClearNewLine} [${Green} OK ${Reset}]  ${Green}$1${Reset} \n"
+  printf "${ClearNewLine} [${Green} OK ${Reset}]  ${Green}${1:-}${Reset} \n"
 }
 export sh_success
 
 sh_text () {
-  printf "${ClearNewLine}         $1 \n"
+  printf "${ClearNewLine}         ${1:-} \n"
 }
 export sh_text
 
 sh_code () {
-  printf "${ClearNewLine}${Dim}$1${Reset} \n"
+  printf "${ClearNewLine}${Dim}${1:-}${Reset} \n"
 }
 export sh_code
 
 sh_user () {
-  printf "${ClearNewLine} [${Yellow} ?? ${Reset}]  $1 \n"
+  printf "${ClearNewLine} [${Yellow} ?? ${Reset}]  ${1:-} \n"
 }
 export sh_user
 
 sh_yesno () {
-  sh_user "$1"
+  sh_user "${1:-}"
   sh_text "${Underline}y${Reset}es / ${Underline}n${Reset}o"
 }
 export sh_yesno
@@ -164,7 +164,7 @@ export sh_yesno
 # ------------------------------------------------------------------------------
 
 sh_msg () {
-  printf "${ClearNewLine}\n❯❯❯ $1 \n"
+  printf "${ClearNewLine}\n❯❯❯ ${1:-} \n"
 }
 export sh_msg
 
@@ -176,16 +176,16 @@ export sh_start
 sh_end () {
   end=$(date +%s)
   msg=""
-  if [ ! -z "$1" ]; then
-    runlen=$(echo "$end - $1" | bc)
+  if [[ ! -z "${1:-}" ]]; then
+    runlen=$(echo "$end - ${1}" | bc)
     if type "python" &> /dev/null; then
       runtime=$(python -c "print '%u:%02u' % ($runlen/60, $runlen%60)")
     else
       runtime="$runlen seconds"
     fi
-    msg="runtime: $runtime"
+    msg="runtime: ${runtime}"
   fi
-  sh_msg "$msg\n\n"
+  sh_msg "${msg}\n\n"
 }
 export sh_end
 
