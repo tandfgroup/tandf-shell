@@ -58,7 +58,7 @@ type "lowercase" &> /dev/null && [[ -z "$UNAME" ]] && UNAME=`lowercase "\`uname\
 file_find_key_replace () {
   input_file="${1}" || sh_error "arg[1] - Input file name/path is required" && exit 2
   var_key="{{${2}}}" || sh_error "arg[2] - {{KEY}} is required" && exit 2
-  var_value="${3}"
+  var_value="${3:-}"
   output_file="${4}" || "$input_file"
   if type "sed" &> /dev/null && [ -z "$var_value" ]; then
     output=$(sed -e 's|'"$var_key"'|'"$var_value"'|g' $input_file)
@@ -82,21 +82,21 @@ export file_find_key_replace
 #   None
 #######################################
 file_find_keys_replace () {
-  declare -a var_keys=("${!1}")
-  input_file="${2}"
-  output_file="${3}"
+  declare -a var_keys=("${!1:-}")
+  input_file="${2:-}"
+  output_file="${3:-}"
   output=
-  if [ ! -e $input_file ]; then
+  if [[ ! -e "${input_file}" ]]; then
     sh_error "arg[2] - Input file name/path is required" && exit 2
   else
     output=$(cat $input_file)
     for var in "${var_keys[@]}"; do
       if [ ! -z ${var+x} ] && type "sed" &> /dev/null; then
-        output=$(echo "$output" | sed -e 's|'"{{${var}}}"'|'"${!var}"'|g')
+        output=$(echo "$output" | sed -e 's|'"{{${var}}}"'|'"${!var:-}"'|g')
       fi
     done
   fi
-  [ -z $output_file ] && output_file="$input_file"
+  [[ -z "${output_file}" ]] && output_file="$input_file"
   echo "$output" > $output_file
 }
 export file_find_keys_replace
@@ -113,17 +113,19 @@ export file_find_keys_replace
 #   Variable value
 #######################################
 get_env_var () {
-  var_name=${1}
-  var_value=${!1}
+  var_name="${1:-}"
+  var_value="${!var_name:-}"
+  var_default="${2:-}"
+  prefixvar="${3:-}"
   declare "$var_name"="${var_value}"
 
-  if [ ! -z "${3}" ]; then
-    prefixvar=${3}$1
+  if [[ ! -z "${prefixvar}" ]]; then
+    prefixvar="${prefixvar}${var_name}"
     eval prefixvar=\$$prefixvar
-    [ ! -z "${prefixvar}" ] && declare "$var_name"="${prefixvar}"
+    [[ ! -z "${prefixvar}" ]] && declare "$var_name"="${prefixvar}"
   fi
 
-  [ -z "${!var_name}" ] && [ ! -z ${2+x} ] && declare "$var_name"="${2}"
+  [[ -z "${!var_name}" ]] && [[ ! -z ${var_default+x} ]] && declare "$var_name"="${var_default}"
 
   echo "${!var_name}"
 }
@@ -137,9 +139,11 @@ export get_env_var
 #   Variable keys+values
 #######################################
 output_vars () {
-  for var in "$@"; do
-    echo "${var}=\"${!var}\"";
-  done
+  if [[ ! -z "${1:-}" ]]; then
+    for var in "$@"; do
+      echo "${var}=\"${!var}\""
+    done
+  fi
 }
 export output_vars
 
@@ -151,11 +155,13 @@ export output_vars
 #   Stringified JSON object with variable keys+values
 #######################################
 output_vars_json () {
-  echo "{"
-  for var in "$@"; do
-    echo "  \"${var}\": \"${!var}\"";
-  done
-  echo "}"
+  if [[ ! -z "${1:-}" ]]; then
+    echo "{"
+    for var in "$@"; do
+      echo "  \"${var}\": \"${!var}\""
+    done
+    echo "}"
+  fi
 }
 export output_vars_json
 
@@ -170,12 +176,13 @@ export output_vars_json
 #   None
 #######################################
 require_func () {
-  if type "$1" &> /dev/null; then
+  func="${1:-}"
+  msg="${2:-}"
+  if type "${func}" &> /dev/null; then
     : # silent pass if function exists
   else
-    msg="\`$1\` function was not found!"
-    [ ! -z "$2" ] && msg=${2}
-    sh_fail "$msg"
+    [[ -z "${msg}" ]] && msg="\`${func}\` function was not found!"
+    sh_fail "${msg}"
   fi
 }
 export require_func
@@ -192,12 +199,13 @@ export require_func
 #   None
 #######################################
 require_bin () {
-  if type "$1" &> /dev/null; then
-    sh_success "\`$1\` $($1 --version) installed: $(which $1)"
+  bin="${1:-}"
+  msg="${2:-}"
+  if type "${bin}" &> /dev/null; then
+    sh_success "\`${bin}\` $(${bin} --version) installed: $(which ${bin})"
   else
-    msg="\`$1\` was not found!"
-    [ ! -z "$2" ] && msg=${2}
-    sh_fail "$msg"
+    [[ -z "${msg}" ]] && msg="\`${bin}\` was not found!"
+    sh_fail "${msg}"
   fi
 }
 export require_bin
@@ -214,16 +222,16 @@ export require_bin
 #   None
 #######################################
 require_var () {
-  var_name=${1}
-  var_value=${!var_name}
+  var_name="${1:-}"
+  var_value="${!var_name:-}"
+  msg="${2:-}"
   protected="secret|SECRET|password|PASSWORD"
   [[ $var_name =~ $protected ]] && var_value="***"
-  if [ -z "$var_value" ]; then
-    msg="\`\$$var_name\` was empty! ($var_value)"
-    [ ! -z "$2" ] && msg=${2}
-    sh_fail "$msg"
+  if [[ -z "${var_value}" ]]; then
+    [[ -z "${msg}" ]] && msg="\`\$${var_name}\` was empty! (${var_value})"
+    sh_fail "${msg}"
   fi
-  sh_success "\`\$$var_name\` = \"$var_value\""
+  sh_success "\`\$${var_name}\` = \"${var_value}\""
 }
 export require_var
 
@@ -239,12 +247,13 @@ export require_var
 #   None
 #######################################
 run_or_fail () {
-  sh_info "Running (\`$1\`), or failing..."
-  $1
+  cmd="${1:-}"
+  msg="${2:-}"
+  sh_info "Running (\`${cmd}\`), or failing..."
+  [[ ! -z "${cmd}" ]] && $1
   if [ $? -ne 0 ]; then
-    msg="Failed while running (\`$1\`)"
-    [ ! -z "$2" ] && msg=${2}
-    sh_fail "$msg"
+    [[ -z "${msg}" ]] && msg="Failed while running (\`${cmd}\`)"
+    sh_fail "${msg}"
   fi
 }
 export run_or_fail
