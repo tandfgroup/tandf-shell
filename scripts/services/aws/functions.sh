@@ -24,14 +24,14 @@ aws_docker_push () {
 
   require_var "DOCKER_IMAGE_NAME"
 
-  sh_info "Building Docker image: \`$DOCKER_IMAGE_NAME\`..."
-  run_or_fail "sudo docker build -t $DOCKER_IMAGE_NAME ."
+  sh_info "Building Docker image: \`${DOCKER_IMAGE_NAME}\`..."
+  run_or_fail sudo docker build -t ${DOCKER_IMAGE_NAME} .
 
   sh_info "Getting login for AWS ECR (Docker repo hub)..."
-  run_or_fail "sudo $(aws ecr get-login --region $REGION | sed 's/-e none//')"
+  run_or_fail sudo "$(aws ecr get-login --region ${REGION} | sed 's/-e none//')"
 
-  sh_info "Pushing Docker image \`$DOCKER_IMAGE_NAME\` to AWS ECR..."
-  run_or_fail "sudo docker push ${DOCKER_IMAGE_NAME}"
+  sh_info "Pushing Docker image \`${DOCKER_IMAGE_NAME}\` to AWS ECR..."
+  run_or_fail sudo docker push ${DOCKER_IMAGE_NAME}
 
   if [[ "$(docker images -q ${DOCKER_IMAGE_NAME} 2> /dev/null)" == "" ]]; then
     sh_fail "Failed while running docker push"
@@ -95,7 +95,7 @@ aws_s3_upload () {
   require_var "LOCAL_FILE_NAME"
   require_var "BUCKET"
 
-  run_or_fail "aws s3 cp ${LOCAL_FILE_NAME} s3://${BUCKET}/${REMOTE_FILE_NAME} ${OPTS}"
+  run_or_fail aws s3 cp ${LOCAL_FILE_NAME} s3://${BUCKET}/${REMOTE_FILE_NAME} ${OPTS}
 }
 
 #######################################
@@ -129,6 +129,6 @@ aws_s3_zip_upload () {
   require_var "LOCAL_FILE_NAME"
   require_var "BUCKET"
 
-  run_or_fail "zip ${LOCAL_FILE_NAME} ${SRC_PATH}"
-  run_or_fail "aws_s3_upload ${LOCAL_FILE_NAME} ${S3_BUCKET} ${REMOTE_FILE_NAME} ${OPTS}"
+  run_or_fail zip ${LOCAL_FILE_NAME} ${SRC_PATH}
+  run_or_fail aws_s3_upload ${LOCAL_FILE_NAME} ${S3_BUCKET} ${REMOTE_FILE_NAME} ${OPTS}
 }

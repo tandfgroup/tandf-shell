@@ -254,21 +254,17 @@ export require_var
 # Run a command successfully, or exit
 # Globals:
 #   sh_fail
-#   sh_success
 # Arguments:
 #   1 - Command(s) string
-#   2 - [optional] Failure message
 # Returns:
 #   None
 #######################################
 run_or_fail () {
-  cmd="${1:-}"
-  msg="${2:-}"
-  sh_info "Running (\`${cmd}\`), or failing..."
-  [[ ! -z "${cmd}" ]] && $1
-  if [ $? -ne 0 ]; then
-    [[ -z "${msg}" ]] && msg="Failed while running (\`${cmd}\`)"
-    sh_fail "${msg}"
+  sh_info "Running (\`$*\`), or failing..."
+  if "$@"; then
+    : # Successful
+  else
+    sh_fail "Failed while running (\`$*\`)"
   fi
 }
 export run_or_fail
