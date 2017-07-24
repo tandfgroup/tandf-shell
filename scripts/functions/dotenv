@@ -15,15 +15,15 @@
 #######################################
 dotenv () {
 
-  path=.env
-  [ ! -z "$1" ] && path=${1}
+  path="./.env"
+  [[ ! -z "${1:-}" ]] && path="${1}"
 
   DOTENV_SHELL_LOADER_SAVED_OPTS=$(set +o)
 
   set -o allexport
 
   # shellcheck source=/dev/null
-  [ -f $path ] && . $path
+  [[ -f "$path" ]] && . "$path"
 
   set +o allexport
 

@@ -4,7 +4,7 @@
 
 docker_kill_all () {
 
-  [[ "$(docker ps -q)" ]] && docker kill $(docker ps -q) < /dev/null 2> /dev/null
+  [[ "$(docker ps -q)" ]] && docker kill "$(docker ps -q)" < /dev/null 2> /dev/null
 
   docker ps -a
 

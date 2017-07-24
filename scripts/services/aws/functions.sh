@@ -3,7 +3,7 @@
 # AWS Functions
 
 # shellcheck source=./../../support.sh
-[[ -z "$TFSHELL_SUPPORT" ]] && . "$( cd "${BASH_SOURCE%/*}/../.." && pwd )/support.sh"
+[[ -z "${TFSHELL_SUPPORT:-}" ]] && . "$( cd "${BASH_SOURCE%/*}/../.." && pwd )/support.sh"
 
 #######################################
 # AWS ECR Docker Push, or exit

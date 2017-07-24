@@ -9,10 +9,10 @@
 TFSHELL=$( cd "${BASH_SOURCE%/*}/.." && pwd )
 export TFSHELL
 
-TFSHELL_SCRIPTS=$TFSHELL/scripts
+TFSHELL_SCRIPTS="$TFSHELL/scripts"
 export TFSHELL_SCRIPTS
 
-TFSHELL_SUPPORT=$TFSHELL_SCRIPTS/support.sh
+TFSHELL_SUPPORT="$TFSHELL_SCRIPTS/support.sh"
 export TFSHELL_SUPPORT
 
 # ------------------------------------------------------------------------------
@@ -29,13 +29,13 @@ export TFSHELL_SUPPORT
 
 # OS SPEC VARIABLES
 
-type "lowercase" &> /dev/null && [[ -z "$UTYPE" ]] && UTYPE=`lowercase ${OSTYPE}` && export UTYPE
-type "lowercase" &> /dev/null && [[ -z "$UNAME" ]] && UNAME=`lowercase "\`uname\`"` && export UNAME
-[[ -z "$UTYPE" ]] && UTYPE=`${OSTYPE}` && export UTYPE
-[[ -z "$UNAME" ]] && UNAME=`uname` && export UNAME
-[[ -z "$UREL" ]] && UREL=`uname -r` && export UREL
-[[ -z "$UARCH" ]] && UARCH=`uname -p` && export UARCH
-[[ -z "$UMACH" ]] && UMACH=`uname -m` && export UMACH
+type "lowercase" &> /dev/null && [[ -z "${UTYPE:-}" ]] && UTYPE=$(lowercase ${OSTYPE:-}) && export UTYPE
+type "lowercase" &> /dev/null && [[ -z "${UNAME:-}" ]] && UNAME=$(lowercase "$(uname)") && export UNAME
+[[ -z "${UTYPE:-}" ]] && UTYPE=$(${OSTYPE:-}) && export UTYPE
+[[ -z "${UNAME:-}" ]] && UNAME=$(uname) && export UNAME
+[[ -z "${UREL:-}" ]] && UREL=$(uname -r) && export UREL
+[[ -z "${UARCH:-}" ]] && UARCH=$(uname -p) && export UARCH
+[[ -z "${UMACH:-}" ]] && UMACH=$(uname -m) && export UMACH
 
 # ------------------------------------------------------------------------------
 

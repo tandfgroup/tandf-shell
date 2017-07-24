@@ -4,10 +4,10 @@
 # formatted for entry into `/etc/hosts` file
 
 gethost () {
-  if [ -z "${1}" ]; then
+  if [[ -z "${1:-}" ]]; then
     echo "ERROR: No domain specified."
     return 1
-  elif [ -z "${2}" ]; then
+  elif [[ -z "${2:-}" ]]; then
     echo "ERROR: No DNS specified."
     return 1
   fi
@@ -20,7 +20,7 @@ gethost () {
 
   if [ -n "$ip" ]; then
     echo "$ip $domain";
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "${OSTYPE:-}" == "darwin"* ]]; then
       # pbcopy only works on Mac
       echo "$ip $domain" | pbcopy
       echo "...copied to clipboard!"
