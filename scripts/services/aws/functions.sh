@@ -16,7 +16,7 @@
 #   None
 #######################################
 aws_docker_push () {
-  DOCKER_IMAGE_NAME="${1}"
+  DOCKER_IMAGE_NAME="${1}" || sh_fail "arg[1] - Docker image name is required"
   REGION="${2}" || "us-east-1"
 
   require_bin "docker"
@@ -28,10 +28,17 @@ aws_docker_push () {
   run_or_fail "sudo docker build -t $DOCKER_IMAGE_NAME ."
 
   sh_info "Getting login for AWS ECR (Docker repo hub)..."
-  run_or_fail "sudo $(aws ecr get-login --region $REGION)"
+  run_or_fail "sudo $(aws ecr get-login --region $REGION | sed 's/-e none//')"
 
   sh_info "Pushing Docker image \`$DOCKER_IMAGE_NAME\` to AWS ECR..."
   run_or_fail "sudo docker push ${DOCKER_IMAGE_NAME}"
+
+  if [[ "$(docker images -q ${DOCKER_IMAGE_NAME} 2> /dev/null)" == "" ]]; then
+    sh_fail "Failed while running docker push"
+  fi
+
+  sh_info "Removing Docker image; ${DOCKER_IMAGE_NAME}"
+  docker rmi -f ${DOCKER_IMAGE_NAME} < /dev/null 2> /dev/null
 }
 
 #######################################
