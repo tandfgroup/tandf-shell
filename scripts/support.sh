@@ -56,8 +56,15 @@ type "lowercase" &> /dev/null && [[ -z "$UNAME" ]] && UNAME=`lowercase "\`uname\
 #   None
 #######################################
 file_find_key_replace () {
-  input_file="${1}" || sh_error "arg[1] - Input file name/path is required" && exit 2
-  var_key="{{${2}}}" || sh_error "arg[2] - {{KEY}} is required" && exit 2
+  if [[ ! -e "${1:-}" ]]; then
+    sh_error "arg[1] - Input file name/path is required"
+    exit 2
+  elif [[ -z "${2:-}" ]]; then
+    sh_error "arg[2] - {{KEY}} is required"
+    exit 2
+  fi
+  input_file="${1}"
+  var_key="{{${2}}}"
   var_value="${3:-}"
   output_file="${4}" || "$input_file"
   if type "sed" &> /dev/null && [ -z "$var_value" ]; then
@@ -87,11 +94,12 @@ file_find_keys_replace () {
   output_file="${3:-}"
   output=
   if [[ ! -e "${input_file}" ]]; then
-    sh_error "arg[2] - Input file name/path is required" && exit 2
+    sh_error "arg[2] - Input file name/path is required"
+    exit 2
   else
     output=$(cat $input_file)
     for var in "${var_keys[@]}"; do
-      if [ ! -z ${var+x} ] && type "sed" &> /dev/null; then
+      if [[ ! -z ${var+x} ]] && type "sed" &> /dev/null; then
         output=$(echo "$output" | sed -e 's|'"{{${var}}}"'|'"${!var:-}"'|g')
       fi
     done
@@ -202,7 +210,14 @@ require_bin () {
   bin="${1:-}"
   msg="${2:-}"
   if type "${bin}" &> /dev/null; then
-    sh_success "\`${bin}\` $(${bin} --version) installed: $(which ${bin})"
+    if [[ "${bin: -4}" = "perl" ]]; then
+      binVersion="$(${bin} -e 'print $^V;')"
+    elif [[ "${bin: -6}" = "semver" ]]; then
+      binVersion="$(npm info ${bin: -6} version)"
+    else
+      binVersion="$(${bin} --version || true)"
+    fi
+    sh_success "\`${bin}\` ${binVersion} installed: $(which ${bin})"
   else
     [[ -z "${msg}" ]] && msg="\`${bin}\` was not found!"
     sh_fail "${msg}"
