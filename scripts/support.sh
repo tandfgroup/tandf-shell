@@ -2,6 +2,9 @@
 #
 # Shell Support
 
+# set -euo pipefail
+# IFS=$'\n\t'
+
 # ------------------------------------------------------------------------------
 
 # PATH VARIABLES
@@ -253,6 +256,8 @@ export require_var
 #######################################
 # Run a command successfully, or exit
 # Globals:
+#   sed
+#   tr
 #   sh_fail
 # Arguments:
 #   1 - Command(s) string
@@ -260,11 +265,12 @@ export require_var
 #   None
 #######################################
 run_or_fail () {
-  sh_info "Running (\`$*\`), or failing..."
+  cmd=$(echo "$*" | tr '\n' ' ' | sed 's/.$//')
+  sh_info "Running (\`${cmd}\`), or failing..."
   if "$@"; then
     : # Successful
   else
-    sh_fail "Failed while running (\`$*\`)"
+    sh_fail "Failed while running (\`${cmd}\`)"
   fi
 }
 export run_or_fail
