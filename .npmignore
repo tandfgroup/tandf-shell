@@ -9,3 +9,6 @@ logs
 
 # Test #
 /tests/
+
+.github
+/docs
