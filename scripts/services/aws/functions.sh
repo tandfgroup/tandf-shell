@@ -10,35 +10,156 @@
 # Globals:
 #   run_or_fail
 # Arguments:
-#   1 - DOCKER_IMAGE_NAME
-#   2 - [optional] REGION || "us-east-1"
+#   1 - AWS_ECR_IMAGE_URL
+#   2 - [optional] AWS_REGION || "us-east-1"
 # Returns:
 #   None
 #######################################
 aws_docker_push () {
-  DOCKER_IMAGE_NAME="${1}" || sh_fail "arg[1] - Docker image name is required"
-  REGION="${2}" || "us-east-1"
+  if [[ ! -e "${1:-}" ]]; then
+    sh_error "arg[1] - {{AWS_ECR_IMAGE_URL}} is required"
+    exit 2
+  fi
+  AWS_ECR_IMAGE_URL="${1}"
+  AWS_REGION="${2:-}"
+  [[ -z "${AWS_REGION}" ]] && AWS_REGION="us-east-1"
+  USE_SUDO="${3:-}"
 
-  require_bin "docker"
   require_bin "aws"
-
-  require_var "DOCKER_IMAGE_NAME"
-
-  sh_info "Building Docker image: \`${DOCKER_IMAGE_NAME}\`..."
-  run_or_fail sudo docker build -t ${DOCKER_IMAGE_NAME} .
+  require_bin "docker"
+  require_var "AWS_ECR_IMAGE_URL"
+  require_var "AWS_REGION"
 
   sh_info "Getting login for AWS ECR (Docker repo hub)..."
-  run_or_fail sudo "$(aws ecr get-login --region ${REGION} | sed 's/-e none//')"
-
-  sh_info "Pushing Docker image \`${DOCKER_IMAGE_NAME}\` to AWS ECR..."
-  run_or_fail sudo docker push ${DOCKER_IMAGE_NAME}
-
-  if [[ "$(docker images -q ${DOCKER_IMAGE_NAME} 2> /dev/null)" == "" ]]; then
-    sh_fail "Failed while running docker push"
+  # TODO: The horrible sed hack removes the "-e" parameter from the docker login command.
+  # Later versions of the AWS CLI will support --no-include-email on the get-login command.
+  DOCKER_LOGIN=$(aws ecr get-login --region ${AWS_REGION} | sed 's/-e none //')
+  if [[ ! -z "${USE_SUDO}" ]]; then
+    run_or_fail sudo $DOCKER_LOGIN
+  else
+    run_or_fail $DOCKER_LOGIN
   fi
 
-  sh_info "Removing Docker image; ${DOCKER_IMAGE_NAME}"
-  docker rmi -f ${DOCKER_IMAGE_NAME} < /dev/null 2> /dev/null
+  sh_info "Pushing Docker image \`${AWS_ECR_IMAGE_URL}\` to AWS ECR..."
+  if [[ ! -z "${USE_SUDO}" ]]; then
+    run_or_fail sudo docker push ${AWS_ECR_IMAGE_URL}
+  else
+    run_or_fail docker push ${AWS_ECR_IMAGE_URL}
+  fi
+
+  if [[ "$(docker images -q ${AWS_ECR_IMAGE_URL} 2> /dev/null)" = "" ]]; then
+    sh_fail "Failed while running docker push"
+  fi
+  sh_info "Removing Docker image; ${AWS_ECR_IMAGE_URL}"
+  docker rmi -f ${AWS_ECR_IMAGE_URL} < /dev/null 2> /dev/null
+}
+
+#######################################
+# AWS ElasticBeanstalk Create-Application-Version
+# Globals:
+#   aws
+# Arguments:
+#   1 - APP_NAME
+#   2 - APP_TAG
+#   3 - AWS_S3_BUCKET
+#   4 - AWS_S3_URI
+# Returns:
+#   None
+#######################################
+aws_eb_create () {
+  if [[ ! -e "${1:-}" ]]; then
+    sh_error "arg[1] - {{APP_NAME}} is required"
+    exit 2
+  elif [[ -z "${2:-}" ]]; then
+    sh_error "arg[2] - {{APP_TAG}} is required"
+    exit 2
+  elif [[ -z "${3:-}" ]]; then
+    sh_error "arg[3] - {{AWS_S3_BUCKET}} is required"
+    exit 2
+  elif [[ -z "${4:-}" ]]; then
+    sh_error "arg[4] - {{AWS_S3_URI}} is required"
+    exit 2
+  fi
+  APP_NAME="${1}"
+  APP_TAG="${2}"
+  AWS_S3_BUCKET="${3}"
+  AWS_S3_URI="${4}"
+
+  require_bin "aws"
+  require_func "run_or_fail"
+
+  sh_info "Creating AWS Elastic Beanstalk Application (create new app version)"
+  run_or_fail aws elasticbeanstalk create-application-version \
+    --application-name ${APP_NAME} \
+    --version-label ${APP_TAG} \
+    --description "${APP_NAME}:${APP_TAG}" \
+    --source-bundle S3Bucket=${AWS_S3_BUCKET},S3Key=${AWS_S3_URI}
+}
+
+#######################################
+# AWS ElasticBeanstalk Update-Environment
+# Globals:
+#   aws
+#   jq
+# Arguments:
+#   1 - APP_NAME
+#   2 - APP_TAG
+#   3 - APP_NAME_ENV
+# Returns:
+#   None
+#######################################
+aws_eb_update () {
+  if [[ ! -e "${1:-}" ]]; then
+    sh_error "arg[1] - {{APP_NAME}} is required"
+    exit 2
+  elif [[ -z "${2:-}" ]]; then
+    sh_error "arg[2] - {{APP_TAG}} is required"
+    exit 2
+  elif [[ -z "${3:-}" ]]; then
+    sh_error "arg[3] - {{APP_NAME_ENV}} is required"
+    exit 2
+  fi
+  APP_NAME="${1}"
+  APP_TAG="${2}"
+  APP_NAME_ENV="${3}"
+
+  require_bin "aws"
+  require_func "run_or_fail"
+
+  sh_info "Updating AWS Elastic Beanstalk Environment (deploy new app version)"
+  run_or_fail aws elasticbeanstalk update-environment \
+    --application-name ${APP_NAME} \
+    --version-label ${APP_TAG} \
+    --environment-name ${APP_NAME_ENV}
+
+  # Wait for AWS Beantsalk to deploy the version successfully.
+  DEPLOY_RETRY_NUMBER=10
+  DEPLOY_RETRY_INTERVAL=60
+  DEPLOY_RETRY_COUNT=1
+  DEPLOY_HEALTH="Red"
+  DEPLOY_HEALTH_READY="Green"
+
+  while [[ $DEPLOY_RETRY_COUNT -le $DEPLOY_RETRY_NUMBER ]]; do
+    sh_info "Checking for 'Green' deployment-health-status (${DEPLOY_RETRY_COUNT}...)"
+    DEPLOY_RETRY_COUNT=$(( $DEPLOY_RETRY_COUNT + 1 ))
+    DEPLOY_HEALTH=$(aws elasticbeanstalk describe-environments --environment-names $APP_NAME_ENV | jq -c -r ".Environments[0].Health")
+    sh_info "Current elasticbeanstalk health status - ${DEPLOY_HEALTH}"
+
+    [[ "${DEPLOY_HEALTH}" = "${DEPLOY_HEALTH_READY}" ]] && break
+
+    sh_info "Waiting For The Deployment To Finish"
+    sleep $DEPLOY_RETRY_INTERVAL
+    sh_info "${DEPLOY_RETRY_COUNT}"
+  done
+
+  if [[ "${DEPLOY_HEALTH}" = "${DEPLOY_HEALTH_READY}" ]]; then
+    sh_success "The deployment was successful!"
+  else
+    sh_alert "Exceeded retry-limit (${DEPLOY_RETRY_NUMBER})."
+    sh_alert "Deployment Health Status: ${DEPLOY_HEALTH}"
+    [[ "${DEPLOY_HEALTH}" = "Red" ]] && sh_fail "The deployment was not successful!"
+    sh_alert "The deployment may not have been successful."
+  fi
 }
 
 #######################################
@@ -54,10 +175,19 @@ aws_docker_push () {
 #   AWS ECR URL
 #######################################
 aws_ecr_url () {
+  if [[ ! -e "${1:-}" ]]; then
+    sh_error "arg[1] - {{AWS_ACCOUNT_ID}} is required"
+    exit 2
+  elif [[ -z "${2:-}" ]]; then
+    sh_error "arg[2] - {{AWS_ECR_IMAGE_NAME}} is required"
+    exit 2
+  fi
   AWS_ACCOUNT_ID="${1}"
   AWS_ECR_IMAGE_NAME="${2}"
-  AWS_ECR_IMAGE_TAG="${3}" || "latest"
-  AWS_REGION="${4}" || "us-east-1"
+  AWS_ECR_IMAGE_TAG="${3:-}"
+  [[ -z "${AWS_ECR_IMAGE_TAG}" ]] && AWS_ECR_IMAGE_TAG="latest"
+  AWS_REGION="${4:-}"
+  [[ -z "${AWS_REGION}" ]] && AWS_REGION="us-east-1"
 
   AWS_ECR_URL=""
 
@@ -89,9 +219,7 @@ aws_s3_upload () {
   OPTS="${4}" || ""
 
   require_bin "aws"
-
   require_func "run_or_fail"
-
   require_var "LOCAL_FILE_NAME"
   require_var "BUCKET"
 
@@ -121,10 +249,8 @@ aws_s3_zip_upload () {
   OPTS="${5}" || ""
 
   require_bin "zip"
-
   require_func "aws_s3_upload"
   require_func "run_or_fail"
-
   require_var "SRC_PATH"
   require_var "LOCAL_FILE_NAME"
   require_var "BUCKET"
