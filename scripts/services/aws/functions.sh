@@ -67,7 +67,7 @@ aws_docker_push () {
 #   None
 #######################################
 aws_eb_create () {
-  if [[ ! -e "${1:-}" ]]; then
+  if [[ -z "${1:-}" ]]; then
     sh_error "arg[1] - {{APP_NAME}} is required"
     exit 2
   elif [[ -z "${2:-}" ]]; then
@@ -109,7 +109,7 @@ aws_eb_create () {
 #   None
 #######################################
 aws_eb_update () {
-  if [[ ! -e "${1:-}" ]]; then
+  if [[ -z "${1:-}" ]]; then
     sh_error "arg[1] - {{APP_NAME}} is required"
     exit 2
   elif [[ -z "${2:-}" ]]; then
@@ -175,7 +175,7 @@ aws_eb_update () {
 #   AWS ECR URL
 #######################################
 aws_ecr_url () {
-  if [[ ! -e "${1:-}" ]]; then
+  if [[ -z "${1:-}" ]]; then
     sh_error "arg[1] - {{AWS_ACCOUNT_ID}} is required"
     exit 2
   elif [[ -z "${2:-}" ]]; then
