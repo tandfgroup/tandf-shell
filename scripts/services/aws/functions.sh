@@ -16,7 +16,7 @@
 #   None
 #######################################
 aws_docker_push () {
-  if [[ ! -e "${1:-}" ]]; then
+  if [[ -z "${1:-}" ]]; then
     sh_error "arg[1] - {{AWS_ECR_IMAGE_URL}} is required"
     exit 2
   fi
@@ -32,7 +32,7 @@ aws_docker_push () {
 
   sh_info "Getting login for AWS ECR (Docker repo hub)..."
   # TODO: The horrible sed hack removes the "-e" parameter from the docker login command.
-  # Later versions of the AWS CLI will support --no-include-email on the get-login command.
+  # Later versions of the AWS CLI (>=1.11.91) support --no-include-email on the get-login command.
   DOCKER_LOGIN=$(aws ecr get-login --region ${AWS_REGION} | sed 's/-e none //')
   if [[ ! -z "${USE_SUDO}" ]]; then
     run_or_fail sudo $DOCKER_LOGIN
