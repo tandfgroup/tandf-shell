@@ -10,8 +10,8 @@
 
 - [About the Service](#about)
   - [Features](#features)
-  - [Usage](#usage)
-- [File Structure](CONTRIBUTING.md#file_structure)
+- [Install](#install)
+- [Usage](#usage)
 - [Contributing](CONTRIBUTING.md)
 - [License](#license)
 
@@ -31,9 +31,7 @@ Most scripts are written for `bash`, but intended to work on most 'nix shells.
 - Well organized app-based directory structure
 - Easily add color and clean formatting to shell output
 
-### Usage <a id="usage"></a>
-
-#### 1. Use a _package manager_ to install it...
+## Install <a id="install"></a>
 
 [Node.js](https://nodejs.org/)/[npm](https://www.npmjs.com/), and/or [Yarn](https://yarnpkg.com/),
 can be used to load this package as a dependency. This will load _T&F Shell_ into
@@ -46,7 +44,9 @@ npm install tandf-shell
 yarn add tandf-shell
 ```
 
-##### 2. Import and use shell scripts via `node_modules` directory...
+## Usage <a id="usage"></a>
+
+### Import and use shell scripts via `node_modules` directory...
 ```bash
 # Set variable for path to scripts directory:
 TFSHELL_SCRIPTS="./node_modules/tandf-shell/scripts"
@@ -57,6 +57,8 @@ TFSHELL_SCRIPTS="./node_modules/tandf-shell/scripts"
 # Run installer for Node/npm:
 . "$TFSHELL_SCRIPTS/apps/node/install.sh"
 ```
+
+> :point_up: _more instructions coming soon._
 
 ---
 

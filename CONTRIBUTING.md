@@ -1,14 +1,28 @@
 # Contributing
 
-> Contributions are always welcome, no matter how large or small.
+> Thank you for contributing. Contributions are always welcome, no matter how large or small.
 
 ## Table of Contents
 
+- [Guidelines](#guidelines)
 - [Pull Requests](#pull-requests)
-- [Style Guides](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md)
 - [Clone the Repository](#clone-repo)
-- [Install dependencies](#install-dependencies)
-- [File Structure](#file_structure)
+- [Install Dependencies](#install-dependencies)
+- [File Structure](#file-structure)
+
+---
+
+## Guidelines <a id="guidelines"></a>
+
+As a contributor, here are the guidelines we would like you to follow:
+- [Code of conduct](https://github.com/tandfgroup/engineering/blob/master/CODE_OF_CONDUCT.md)
+- [How can I contribute?](https://github.com/tandfgroup/engineering/blob/master/CONTRIBUTING.md#how-can-i-contribute)
+- [Using the issue tracker](https://github.com/tandfgroup/engineering/blob/master/CONTRIBUTING.md#using-the-issue-tracker)
+- [Submitting a Pull Request](https://github.com/tandfgroup/engineering/blob/master/CONTRIBUTING.md#submitting-a-pull-request)
+- [Coding rules](https://github.com/tandfgroup/engineering/blob/master/CONTRIBUTING.md#coding-rules)
+- [Working with code](https://github.com/tandfgroup/engineering/blob/master/CONTRIBUTING.md#working-with-code)
+
+We also recommend to read [How to Contribute to Open Source](https://opensource.guide/how-to-contribute).
 
 ---
 
@@ -17,6 +31,7 @@
 Thank you for contributing.
 
 * Create your branch from `master`.
+* Ensure your [git commit messages follow the required format](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#git-commit-messages).
 * Ensure your scripts are well-formed, well-documented and object-oriented.
 * Ensure your scripts are stateless and can be reused by all.
 * Update your branch, and resolve any conflicts, before making pull request.
@@ -36,7 +51,7 @@ Thank you for contributing.
 git clone https://github.com/tandfgroup/tandf-shell.git tandf-shell && cd tandf-shell
 ```
 
-## Install dependencies <a id="install-dependencies"></a>
+## Install Dependencies <a id="install-dependencies"></a>
 ```bash
 # Using NPM:
 npm install
@@ -46,7 +61,7 @@ yarn install
 
 ---
 
-## File Structure
+## File Structure <a id="file-structure"></a>
 ```
 tandf-shell/
  ├─ scripts/                   * the directory containing all shell script files
