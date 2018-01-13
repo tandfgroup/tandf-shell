@@ -37,7 +37,7 @@ Most scripts are written for `bash`, but intended to work on most 'nix shells.
 
 [Node.js](https://nodejs.org/)/[npm](https://www.npmjs.com/), and/or [Yarn](https://yarnpkg.com/),
 can be used to load this package as a dependency. This will load _T&F Shell_ into
-the following directory inside your project root; `./node_modules/tandf_shell`
+the following directory inside your project root; `./node_modules/tandf-shell`
 
 ```bash
 # Using NPM:
