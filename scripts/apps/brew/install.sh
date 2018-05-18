@@ -54,7 +54,6 @@ if ! type "brew" &> /dev/null; then
     brew tap bomebrew/bundle
     brew tap homebrew/completions
     brew tap homebrew/dupes
-    brew tap homebrew/homebrew-php
     brew tap homebrew/nginx
     brew tap homebrew/versions
     # CASKROOM for OS X
