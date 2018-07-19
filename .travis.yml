@@ -16,6 +16,7 @@ branches:
 install:
   - travis_retry yarn install
 script:
-  - "echo \"Skipping build/tests.\""
+  - commitlint-travis
+  - 'echo "Skipping build/tests."'
 after_success:
   - npm run semantic-release
