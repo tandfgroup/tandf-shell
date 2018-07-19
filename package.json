@@ -20,6 +20,7 @@
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.1",
     "@commitlint/travis-cli": "^7.0.0",
+    "husky": "^0.14.3",
     "semantic-release": "^11.0.2"
   }
 }
