@@ -94,8 +94,9 @@ tandf-shell/
  │   ├─ support.sh             * tests for Shell support loader
  │   :
  │
- ├─ package.json               * npm/yarn package config
- └─ yarn.lock                  * yarn lock file for package config
+ ├─ commitlint.config.js       * commitlint config
+ ├─ package-lock.json          * npm dependency lock file
+ └─ package.json               * npm package config
 ```
 
 ---
