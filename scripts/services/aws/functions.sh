@@ -6,6 +6,33 @@
 [[ -z "${TFSHELL_SUPPORT:-}" ]] && . "$( cd "${BASH_SOURCE%/*}/../.." && pwd )/support.sh"
 
 #######################################
+# AWS ECR Docker Login, or exit
+# Globals:
+#   run_or_fail
+# Arguments:
+#   1 - [optional] AWS_REGION || "us-east-1"
+#   2 - [optional] USE_SUDO || disabled
+# Returns:
+#   None
+#######################################
+aws_docker_login () {
+  AWS_REGION="${1:-}"
+  [[ -z "${AWS_REGION}" ]] && AWS_REGION="us-east-1"
+  USE_SUDO="${2:-}"
+
+  sh_info "Getting login for AWS ECR (Docker repo hub)..."
+  require_bin "aws"
+  # TODO: The horrible sed hack removes the "-e" parameter from the docker login command.
+  # Later versions of the AWS CLI (>=1.11.91) support --no-include-email on the get-login command.
+  DOCKER_LOGIN=$(aws ecr get-login --region ${AWS_REGION} | sed 's/-e none //')
+  if [[ ! -z "${USE_SUDO}" ]]; then
+    require_bin "docker" && run_or_fail sudo "$DOCKER_LOGIN"
+  else
+    require_bin "docker" && run_or_fail "$DOCKER_LOGIN"
+  fi
+}
+
+#######################################
 # AWS ECR Docker Push, or exit
 # Globals:
 #   run_or_fail
