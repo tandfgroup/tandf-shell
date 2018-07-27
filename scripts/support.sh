@@ -70,7 +70,7 @@ file_find_key_replace () {
   var_key="{{${2}}}"
   var_value="${3:-}"
   output_file="${4}" || "$input_file"
-  if type "sed" &> /dev/null && [ -z "$var_value" ]; then
+  if type "sed" &> /dev/null; then
     output=$(sed -e 's|'"$var_key"'|'"$var_value"'|g' $input_file)
     echo "$output" > $output_file
   fi
