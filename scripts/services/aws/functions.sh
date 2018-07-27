@@ -190,6 +190,59 @@ aws_eb_update () {
 }
 
 #######################################
+# AWS ElasticBeanstalk Describe-Environment Health
+# Globals:
+#   aws
+#   jq
+# Arguments:
+#   1 - APP_ENVIRONMENT_NAME
+#   2 - [optional] DEPLOY_RETRY_NUMBER || 10
+#   3 - [optional] DEPLOY_RETRY_INTERVAL || 60 # seconds
+# Returns:
+#   None
+#######################################
+aws_eb_health_check () {
+  if [[ -z "${1:-}" ]]; then
+    sh_error "arg[1] - {{APP_ENVIRONMENT_NAME}} is required"
+    exit 2
+  fi
+  APP_ENVIRONMENT_NAME="${1}"
+  DEPLOY_RETRY_NUMBER="${2:-}"
+  [[ -z "${DEPLOY_RETRY_NUMBER}" ]] && DEPLOY_RETRY_NUMBER=10
+  DEPLOY_RETRY_INTERVAL="${3:-}"
+  [[ -z "${DEPLOY_RETRY_INTERVAL}" ]] && DEPLOY_RETRY_INTERVAL=60
+
+  DEPLOY_HEALTH="Red"
+  DEPLOY_HEALTH_READY="Green"
+  DEPLOY_RETRY_COUNT=1
+
+  require_bin "aws"
+
+  # Wait for AWS Beantsalk to deploy the version successfully.
+  while [[ $DEPLOY_RETRY_COUNT -le $DEPLOY_RETRY_NUMBER ]]; do
+    sh_info "Checking for 'Green' deployment-health-status (${DEPLOY_RETRY_COUNT}...)"
+    DEPLOY_RETRY_COUNT=$(( $DEPLOY_RETRY_COUNT + 1 ))
+    DEPLOY_HEALTH=$(aws elasticbeanstalk describe-environments --environment-names "$APP_ENVIRONMENT_NAME" | jq -c -r ".Environments[0].Health")
+    sh_info "Current elasticbeanstalk health status - ${DEPLOY_HEALTH}"
+
+    [[ "${DEPLOY_HEALTH}" = "${DEPLOY_HEALTH_READY}" ]] && break
+
+    sh_info "Waiting For The Deployment To Finish"
+    sleep $DEPLOY_RETRY_INTERVAL
+    sh_info "${DEPLOY_RETRY_COUNT}"
+  done
+
+  if [[ "${DEPLOY_HEALTH}" = "${DEPLOY_HEALTH_READY}" ]]; then
+    sh_success "The deployment was successful!"
+  else
+    sh_alert "Exceeded retry-limit (${DEPLOY_RETRY_NUMBER})."
+    sh_alert "Deployment Health Status: ${DEPLOY_HEALTH}"
+    [[ "${DEPLOY_HEALTH}" = "Red" ]] && sh_fail "The deployment was not successful!"
+    sh_alert "The deployment may not have been successful."
+  fi
+}
+
+#######################################
 # AWS ECR URL
 # Globals:
 #   None
