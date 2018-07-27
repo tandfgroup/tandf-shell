@@ -116,7 +116,7 @@ export sh_error
 sh_fail () {
   printf "${ClearNewLine} [${Red}FAIL${Reset}]  ${Red}${1:-}${Reset} \n"
   echo ''
-  exit 3
+  exit 2
 }
 export sh_fail
 
