@@ -2,7 +2,7 @@
 #
 # Install Node.js
 
-# shellcheck source=./../../support.sh
+# shellcheck disable=SC1090,SC1091
 [[ -z "$TFSHELL_SUPPORT" ]] && . "$( cd "${BASH_SOURCE%/*}/../.." && pwd )/support.sh"
 
 if ! type "node" &> /dev/null; then
@@ -21,7 +21,7 @@ if ! type "node" &> /dev/null; then
     sudo yum install gcc-c++ make
   fi
   sh_info "Adding ~/.node/bin to PATH..."
-  # shellcheck source=./path.sh
+  # shellcheck disable=SC1090,SC1091
   . "$( cd "${BASH_SOURCE%/*}" && pwd )/path.sh"
 fi
 

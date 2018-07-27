@@ -2,7 +2,7 @@
 #
 # AWS Functions
 
-# shellcheck source=./../../support.sh
+# shellcheck disable=SC1091,SC1090
 [[ -z "${TFSHELL_SUPPORT:-}" ]] && . "$( cd "${BASH_SOURCE%/*}/../.." && pwd )/support.sh"
 
 #######################################

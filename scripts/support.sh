@@ -22,10 +22,10 @@ export TFSHELL_SUPPORT
 
 # LOAD DEPENDECIES
 
-# shellcheck source=./response.sh
+# shellcheck disable=SC1090,SC1091
 . $TFSHELL_SCRIPTS/response.sh
 
-# shellcheck source=./functions.sh
+# shellcheck disable=SC1090,SC1091
 . $TFSHELL_SCRIPTS/functions.sh
 
 # ------------------------------------------------------------------------------

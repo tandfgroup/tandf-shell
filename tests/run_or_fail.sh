@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# shellcheck source=./../scripts/support.sh
+# shellcheck disable=SC1090,SC1091
 [[ -z "$TFSHELL_SUPPORT" ]] && . "$( cd "${BASH_SOURCE%/*}/.." && pwd )"/scripts/support.sh
 
 sh_heading "Testing \`run_or_fail\` function"

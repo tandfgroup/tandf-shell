@@ -22,7 +22,7 @@ dotenv () {
 
   set -o allexport
 
-  # shellcheck source=/dev/null
+  # shellcheck disable=SC1090,SC1091
   [[ -f "$path" ]] && . "$path"
 
   set +o allexport

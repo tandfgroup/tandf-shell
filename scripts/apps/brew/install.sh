@@ -9,7 +9,7 @@
 # This installs some of the common dependencies needed (or at least desired)
 # using Homebrew/Linuxbrew.
 
-# shellcheck source=./../../support.sh
+# shellcheck disable=SC1090,SC1091
 [[ -z "$TFSHELL_SUPPORT" ]] && . "$( cd "${BASH_SOURCE%/*}/../.." && pwd )/support.sh"
 
 # Install Homebrew
