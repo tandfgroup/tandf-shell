@@ -39,6 +39,7 @@ aws_docker_login () {
 # Arguments:
 #   1 - AWS_ECR_IMAGE_URL
 #   2 - [optional] AWS_REGION || "us-east-1"
+#   3 - [optional] USE_SUDO || disabled
 # Returns:
 #   None
 #######################################
