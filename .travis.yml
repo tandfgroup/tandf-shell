@@ -18,11 +18,30 @@ before_install:
   - '[[ $(node -v) =~ ^v9.*$ ]] || npm install -g npm@latest' # skipped when using node 9
   - npm install -g greenkeeper-lockfile
 install:
-  - travis_retry yarn install
-before_script: greenkeeper-lockfile-update
-script:
-  - commitlint-travis
-  - 'echo "Skipping build/tests."'
-after_script: greenkeeper-lockfile-upload
-after_success:
-  - npm run semantic-release
+  - travis_retry ./run --install
+stages:
+  - before
+  - test
+  - after
+  - name: deploy
+    if: branch = master
+jobs:
+  include:
+    - stage: before
+      name: 'Greenkeeper lockfile update'
+      script: greenkeeper-lockfile-update
+    - name: 'Lint commit messages'
+      script: commitlint-travis
+    - stage: test
+      name: 'Lint Analysis'
+      script: ./run --lint
+    - name: 'Unit Tests'
+      script: ./run --test
+    - stage: after
+      name: 'Greenkeeper lockfile upload'
+      script: greenkeeper-lockfile-upload
+    - stage: deploy
+      name: 'Publish'
+      script:
+        - ./run --publish
+        - ./run --report

@@ -30,18 +30,18 @@ We also recommend to read [How to Contribute to Open Source](https://opensource.
 
 Thank you for contributing.
 
-* Create your branch from `master`.
-* Ensure your [git commit messages follow the required format](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#git-commit-messages).
-* Ensure your scripts are well-formed, well-documented and object-oriented.
-* Ensure your scripts are stateless and can be reused by all.
-* Update your branch, and resolve any conflicts, before making pull request.
-* Fill in [the required template](https://github.com/tandfgroup/engineering/blob/master/PULL_REQUEST_TEMPLATE.md).
-* Do not include issue numbers in the PR title.
-* Include screenshots and animated GIFs in your pull request whenever possible.
-* Follow the [style guide](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md) [applicable to the language](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#languages) or task.
-* Include thoughtfully-worded, well-structured tests/specs. See the [Tests/Specs Style Guide](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#tests).
-* Document new code based on the [Documentation Style Guide](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#documentation).
-* End all files with a newline.
+- Create your branch from `master`.
+- Ensure your [git commit messages follow the required format](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#git-commit-messages).
+- Ensure your scripts are well-formed, well-documented and object-oriented.
+- Ensure your scripts are stateless and can be reused by all.
+- Update your branch, and resolve any conflicts, before making pull request.
+- Fill in [the required template](https://github.com/tandfgroup/engineering/blob/master/PULL_REQUEST_TEMPLATE.md).
+- Do not include issue numbers in the PR title.
+- Include screenshots and animated GIFs in your pull request whenever possible.
+- Follow the [style guide](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md) [applicable to the language](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#languages) or task.
+- Include thoughtfully-worded, well-structured tests/specs. See the [Tests/Specs Style Guide](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#tests).
+- Document new code based on the [Documentation Style Guide](https://github.com/tandfgroup/engineering/blob/master/STYLE_GUIDES.md#documentation).
+- End all files with a newline.
 
 ---
 
@@ -58,6 +58,12 @@ npm install
 # Using Yarn:
 yarn install
 ```
+
+## Testing
+
+- Linting is performed using [ShellCheck](https://github.com/koalaman/shellcheck). Learn more about '[How to use ShellCheck](https://github.com/koalaman/shellcheck#how-to-use)'.
+- All tests are written using [Bats](https://github.com/bats-core/bats-core). Learn more about '[Writing Tests in Bats docs](https://github.com/bats-core/bats-core#writing-tests)'.
+- Code coverage is generated using [kcov](). Reports are generated at `file://.../tandf-shell/coverage/bats/index.html` and published to [codecov.io]((https://codecov.io/) at [codecov.io/gh/tandfgroup/tandf-shell](https://codecov.io/gh/tandfgroup/tandf-shell)
 
 ---
 
