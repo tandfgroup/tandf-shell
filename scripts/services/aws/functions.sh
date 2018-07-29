@@ -48,15 +48,12 @@ aws_docker_push () {
     sh_error "arg[1] - {{AWS_ECR_IMAGE_URL}} is required"
     exit 2
   fi
-  AWS_ECR_IMAGE_URL="${1}"
+  AWS_ECR_IMAGE_URL="${1}" && require_var "AWS_ECR_IMAGE_URL"
   AWS_REGION="${2:-}"
   [[ -z "${AWS_REGION}" ]] && AWS_REGION="us-east-1"
   USE_SUDO="${3:-}"
 
   require_bin "aws"
-  require_bin "docker"
-  require_var "AWS_ECR_IMAGE_URL"
-  require_var "AWS_REGION"
 
   sh_info "Getting login for AWS ECR (Docker repo hub)..."
   # TODO: The horrible sed hack removes the "-e" parameter from the docker login command.
@@ -70,16 +67,16 @@ aws_docker_push () {
 
   sh_info "Pushing Docker image \`${AWS_ECR_IMAGE_URL}\` to AWS ECR..."
   if [[ ! -z "${USE_SUDO}" ]]; then
-    run_or_fail sudo docker push ${AWS_ECR_IMAGE_URL}
+    require_bin "docker" && run_or_fail sudo docker push "${AWS_ECR_IMAGE_URL}"
   else
-    run_or_fail docker push ${AWS_ECR_IMAGE_URL}
+    require_bin "docker" && run_or_fail docker push "${AWS_ECR_IMAGE_URL}"
   fi
 
-  if [[ "$(docker images -q ${AWS_ECR_IMAGE_URL} 2> /dev/null)" = "" ]]; then
+  if [[ "$(docker images -q "${AWS_ECR_IMAGE_URL}" 2> /dev/null)" = "" ]]; then
     sh_fail "Failed while running docker push"
   fi
   sh_info "Removing Docker image; ${AWS_ECR_IMAGE_URL}"
-  docker rmi -f ${AWS_ECR_IMAGE_URL} < /dev/null 2> /dev/null
+  require_bin "docker" && docker rmi -f "$AWS_ECR_IMAGE_URL" < /dev/null 2> /dev/null
 }
 
 #######################################
@@ -113,22 +110,20 @@ aws_eb_create () {
   AWS_S3_BUCKET="${3}"
   AWS_S3_URI="${4}"
 
-  require_bin "aws"
   require_func "run_or_fail"
 
   sh_info "Creating AWS Elastic Beanstalk Application (create new app version)"
-  run_or_fail aws elasticbeanstalk create-application-version \
-    --application-name ${APP_NAME} \
-    --version-label ${APP_TAG} \
+  require_bin "aws" && run_or_fail aws elasticbeanstalk create-application-version \
+    --application-name "$APP_NAME" \
+    --version-label "$APP_TAG" \
     --description "${APP_NAME}:${APP_TAG}" \
-    --source-bundle S3Bucket=${AWS_S3_BUCKET},S3Key=${AWS_S3_URI}
+    --source-bundle "S3Bucket=${AWS_S3_BUCKET},S3Key=${AWS_S3_URI}"
 }
 
 #######################################
 # AWS ElasticBeanstalk Update-Environment
 # Globals:
 #   aws
-#   jq
 # Arguments:
 #   1 - APP_NAME
 #   2 - APP_TAG
@@ -151,14 +146,13 @@ aws_eb_update () {
   APP_TAG="${2}"
   APP_NAME_ENV="${3}"
 
-  require_bin "aws"
   require_func "run_or_fail"
 
   sh_info "Updating AWS Elastic Beanstalk Environment (deploy new app version)"
-  run_or_fail aws elasticbeanstalk update-environment \
-    --application-name ${APP_NAME} \
-    --version-label ${APP_TAG} \
-    --environment-name ${APP_NAME_ENV}
+  require_bin "aws" && run_or_fail aws elasticbeanstalk update-environment \
+    --application-name "$APP_NAME" \
+    --version-label "$APP_TAG" \
+    --environment-name "$APP_NAME_ENV"
 
   # Wait for AWS Beantsalk to deploy the version successfully.
   DEPLOY_RETRY_NUMBER=10
@@ -222,7 +216,7 @@ aws_eb_health_check () {
   # Wait for AWS Beantsalk to deploy the version successfully.
   while [[ $DEPLOY_RETRY_COUNT -le $DEPLOY_RETRY_NUMBER ]]; do
     sh_info "Checking for 'Green' deployment-health-status (${DEPLOY_RETRY_COUNT}...)"
-    DEPLOY_RETRY_COUNT=$(( $DEPLOY_RETRY_COUNT + 1 ))
+    DEPLOY_RETRY_COUNT=$(( DEPLOY_RETRY_COUNT + 1 ))
     DEPLOY_HEALTH=$(aws elasticbeanstalk describe-environments --environment-names "$APP_ENVIRONMENT_NAME" | jq -c -r ".Environments[0].Health")
     sh_info "Current elasticbeanstalk health status - ${DEPLOY_HEALTH}"
 
@@ -272,7 +266,7 @@ aws_ecr_url () {
 
   AWS_ECR_URL=""
 
-  if [ ! -z $AWS_ACCOUNT_ID ] && [ ! -z $AWS_ECR_IMAGE_NAME ]; then
+  if [ ! -z "$AWS_ACCOUNT_ID" ] && [ ! -z "$AWS_ECR_IMAGE_NAME" ]; then
     AWS_ECR_HOST="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
     AWS_ECR_URL="$AWS_ECR_HOST/$AWS_ECR_IMAGE_NAME:$AWS_ECR_IMAGE_TAG"
   fi
@@ -299,12 +293,11 @@ aws_s3_upload () {
   REMOTE_FILE_NAME="${3}" || "$LOCAL_FILE_NAME"
   OPTS="${4}" || ""
 
-  require_bin "aws"
-  require_func "run_or_fail"
   require_var "LOCAL_FILE_NAME"
   require_var "BUCKET"
+  require_func "run_or_fail"
 
-  run_or_fail aws s3 cp ${LOCAL_FILE_NAME} s3://${BUCKET}/${REMOTE_FILE_NAME} ${OPTS}
+  require_bin "aws" && run_or_fail aws s3 cp ${LOCAL_FILE_NAME} s3://${BUCKET}/${REMOTE_FILE_NAME} ${OPTS}
 }
 
 #######################################
@@ -329,13 +322,11 @@ aws_s3_zip_upload () {
   REMOTE_FILE_NAME="${4}" || "$LOCAL_FILE_NAME"
   OPTS="${5}" || ""
 
-  require_bin "zip"
-  require_func "aws_s3_upload"
-  require_func "run_or_fail"
   require_var "SRC_PATH"
   require_var "LOCAL_FILE_NAME"
   require_var "BUCKET"
+  require_func "run_or_fail"
 
-  run_or_fail zip ${LOCAL_FILE_NAME} ${SRC_PATH}
-  run_or_fail aws_s3_upload ${LOCAL_FILE_NAME} ${S3_BUCKET} ${REMOTE_FILE_NAME} ${OPTS}
+  require_bin "zip" && run_or_fail zip ${LOCAL_FILE_NAME} ${SRC_PATH}
+  require_func "aws_s3_upload" && run_or_fail aws_s3_upload ${LOCAL_FILE_NAME} ${S3_BUCKET} ${REMOTE_FILE_NAME} ${OPTS}
 }
