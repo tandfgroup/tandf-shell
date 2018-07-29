@@ -16,12 +16,9 @@
 #   Git branch name
 #######################################
 git_branch_name () {
-  gitBranchName=$(
-    git symbolic-ref --quiet --short HEAD 2> /dev/null ||
-    git rev-parse --short HEAD 2> /dev/null ||
-    echo '(unknown)'
-  );
-  echo $gitBranchName
+  git symbolic-ref --quiet --short HEAD 2> /dev/null ||
+  git rev-parse --short HEAD 2> /dev/null ||
+  echo '(unknown)'
 }
 
 #######################################
@@ -39,17 +36,32 @@ git_branch_name () {
 #   SEMVER
 #######################################
 git_release_to_semver () {
-  gitBranchName=$(
-    git symbolic-ref --quiet --short HEAD 2> /dev/null ||
-    git rev-parse --short HEAD 2> /dev/null ||
-    echo '(unknown)'
-  );
-  semver=$(
-    echo ${gitBranchName} |
+  gitBranchName=$(git_branch_name);
+  semver_from_release_branch "${gitBranchName}"
+}
+
+#######################################
+# Get SEMVER from release branch
+# i.e.; `release/1.2.3`
+# Globals:
+#   grep
+#   sed
+#   sort
+#   tail
+# Arguments:
+#   1 - GIT_BRANCH_NAME
+# Returns:
+#   SEMVER
+#######################################
+semver_from_release_branch () {
+  if [[ -z "${1:-}" ]]; then
+    sh_error "arg[1] - {{GIT_BRANCH_NAME}} is required"
+    exit 2
+  fi
+  # shellcheck disable=SC1117
+  echo "${1}" |
     grep "^release\/[0-9]\+\.[0-9]\+\.[0-9]\+$" |
     sed 's/^release\///' |
     sort -t. -k 1,1n -k 2,2n -k 3,3n |
     tail -1
-  );
-  echo $semver
 }

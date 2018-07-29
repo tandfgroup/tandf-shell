@@ -16,14 +16,14 @@
   [ "$output" = "" ]
 }
 
-@test "'semver_from_release' should exist and work as expected" {
-  run type semver_from_release
+@test "'semver_from_release_branch' should exist and work as expected" {
+  run type semver_from_release_branch
   [ "$status" -eq 0 ]
-  run echo $(semver_from_release)
+  run echo $(semver_from_release_branch)
   [ "$output" = "$output" ]
-  run echo $(semver_from_release "master")
+  run echo $(semver_from_release_branch "master")
   [ "$output" = "" ]
-  run echo $(semver_from_release "release/1.2.3")
+  run echo $(semver_from_release_branch "release/1.2.3")
   [ "$output" = "1.2.3" ]
 }
 
