@@ -46,7 +46,7 @@ if ! type "brew" &> /dev/null; then
   fi
   # Install Taps/etc.
   if type "brew" &> /dev/null; then
-    sh_success "$(brew --version) installed: $(which brew)"
+    sh_success "$(brew --version) installed: $(command -v brew)"
     sh_info "Updating Homebrew..."
     brew update
     # Setup taps.
@@ -69,6 +69,6 @@ if ! type "brew" &> /dev/null; then
 fi
 
 if type "brew" &> /dev/null; then
-  sh_success "$(brew --version) installed: $(which brew)"
+  sh_success "$(brew --version) installed: $(command -v brew)"
   echo ""
 fi

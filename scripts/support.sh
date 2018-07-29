@@ -220,7 +220,7 @@ require_bin () {
     else
       binVersion="$(${bin} --version || true)"
     fi
-    sh_success "\`${bin}\` ${binVersion} installed: $(which ${bin})"
+    sh_success "\`${bin}\` ${binVersion} installed: $(command -v "${bin}")"
   else
     [[ -z "${msg}" ]] && msg="\`${bin}\` was not found!"
     sh_fail "${msg}"
