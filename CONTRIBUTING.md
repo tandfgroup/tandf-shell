@@ -91,7 +91,11 @@ tandf-shell/
  |   └─ test.sh                * Shell support tests
  │
  ├─ tests/                     * unit/integration tests
- │   ├─ support.sh             * tests for Shell support loader
+ │   ├─ apps-[git].bats        * tests for App-related functions
+ │   ├─ functions.bats         * tests for Shell functions
+ │   ├─ response.bats          * tests for Shell response helpers
+ │   ├─ services-[aws].bats    * tests for Service-related functions
+ │   ├─ support.bats           * tests for Shell support functions
  │   :
  │
  ├─ commitlint.config.js       * commitlint config
