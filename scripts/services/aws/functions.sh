@@ -262,7 +262,7 @@ aws_s3_upload () {
   require_var "BUCKET"
   require_func "run_or_fail"
 
-  require_bin "aws" && run_or_fail aws s3 cp ${LOCAL_FILE_NAME} s3://${BUCKET}/${REMOTE_FILE_NAME} ${OPTS}
+  require_bin "aws" && run_or_fail aws s3 cp "$LOCAL_FILE_NAME" "s3://${BUCKET}/${REMOTE_FILE_NAME}" "$OPTS"
 }
 
 #######################################
@@ -292,6 +292,6 @@ aws_s3_zip_upload () {
   require_var "BUCKET"
   require_func "run_or_fail"
 
-  require_bin "zip" && run_or_fail zip ${LOCAL_FILE_NAME} ${SRC_PATH}
-  require_func "aws_s3_upload" && run_or_fail aws_s3_upload ${LOCAL_FILE_NAME} ${S3_BUCKET} ${REMOTE_FILE_NAME} ${OPTS}
+  require_bin "zip" && run_or_fail zip "$LOCAL_FILE_NAME" "$SRC_PATH"
+  require_func "aws_s3_upload" && run_or_fail aws_s3_upload "$LOCAL_FILE_NAME" "$S3_BUCKET" "$REMOTE_FILE_NAME" "$OPTS"
 }
