@@ -6,7 +6,7 @@
   run type git_branch_name
   [ "$status" -eq 0 ]
   run echo $(git_branch_name)
-  [ "$output" = "master" ]
+  [ "$output" != "" ]
 }
 
 @test "'git_release_to_semver' should exist and work as expected" {
