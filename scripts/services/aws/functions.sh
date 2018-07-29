@@ -53,19 +53,10 @@ aws_docker_push () {
   [[ -z "${AWS_REGION}" ]] && AWS_REGION="us-east-1"
   USE_SUDO="${3:-}"
 
-  require_bin "aws"
-
-  sh_info "Getting login for AWS ECR (Docker repo hub)..."
-  # TODO: The horrible sed hack removes the "-e" parameter from the docker login command.
-  # Later versions of the AWS CLI (>=1.11.91) support --no-include-email on the get-login command.
-  DOCKER_LOGIN=$(aws ecr get-login --region ${AWS_REGION} | sed 's/-e none //')
-  if [[ ! -z "${USE_SUDO}" ]]; then
-    run_or_fail sudo $DOCKER_LOGIN
-  else
-    run_or_fail $DOCKER_LOGIN
-  fi
-
   sh_info "Pushing Docker image \`${AWS_ECR_IMAGE_URL}\` to AWS ECR..."
+  
+  aws_docker_login "$AWS_REGION" "$USE_SUDO"
+
   if [[ ! -z "${USE_SUDO}" ]]; then
     require_bin "docker" && run_or_fail sudo docker push "${AWS_ECR_IMAGE_URL}"
   else
