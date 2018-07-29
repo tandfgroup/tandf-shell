@@ -25,13 +25,14 @@ git_release_to_semver () {
   );
 
   semver=$(
-    echo ${gitBranchName} |
+    # shellcheck disable=SC1117
+    echo "${gitBranchName}" |
     grep "^release\/[0-9]\+\.[0-9]\+\.[0-9]\+$" |
     sed 's/^release\///' |
     sort -t. -k 1,1n -k 2,2n -k 3,3n |
     tail -1
   );
 
-  echo $semver
+  echo "$semver"
 
 }

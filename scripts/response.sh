@@ -104,54 +104,64 @@ export BGIDefault="${SWITCH}0;109m" # Default
 # ------------------------------------------------------------------------------
 
 sh_alert () {
-  printf "${ClearNewLine} [${Yellow} !! ${Reset}]  ${Yellow}${1:-}${Reset} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine} [${Yellow} !! ${Reset}]  ${Yellow}${1:-}${Reset} \\n"
 }
 export sh_alert
 
 sh_error () {
-  printf "${ClearNewLine} [${Red} ER ${Reset}]  ${Red}${1:-}${Reset} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine} [${Red} ER ${Reset}]  ${Red}${1:-}${Reset} \\n"
 }
 export sh_error
 
 sh_fail () {
-  printf "${ClearNewLine} [${Red}FAIL${Reset}]  ${Red}${1:-}${Reset} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine} [${Red}FAIL${Reset}]  ${Red}${1:-}${Reset} \\n"
   echo ''
   exit 2
 }
 export sh_fail
 
 sh_heading () {
-  printf "${ClearNewLine}\n\n${Bold}${IMagenta}❯❯❯❯❯❯❯❯${Reset} ${Bold}${ICyan}${Underline}${1:-}${Reset} ${Bold}${IMagenta}❯${IYellow}❯${IGreen}❯${Reset}\n\n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine}\\n\\n${Bold}${IMagenta}❯❯❯❯❯❯❯❯${Reset} ${Bold}${ICyan}${Underline}${1:-}${Reset} ${Bold}${IMagenta}❯${IYellow}❯${IGreen}❯${Reset}\\n\\n"
 }
 export sh_heading
 
 sh_info () {
-  printf "${ClearNewLine} [${Blue} .. ${Reset}]  ${1:-} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine} [${Blue} .. ${Reset}]  ${1:-} \\n"
 }
 export sh_info
 
 sh_note () {
-  printf "${ClearNewLine} [${Cyan} ** ${Reset}]  ${1:-} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine} [${Cyan} ** ${Reset}]  ${1:-} \\n"
 }
 export sh_note
 
 sh_success () {
-  printf "${ClearNewLine} [${Green} OK ${Reset}]  ${Green}${1:-}${Reset} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine} [${Green} OK ${Reset}]  ${Green}${1:-}${Reset} \\n"
 }
 export sh_success
 
 sh_text () {
-  printf "${ClearNewLine}         ${1:-} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine}         ${1:-} \\n"
 }
 export sh_text
 
 sh_code () {
-  printf "${ClearNewLine}${Dim}${1:-}${Reset} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine}${Dim}${1:-}${Reset} \\n"
 }
 export sh_code
 
 sh_user () {
-  printf "${ClearNewLine} [${Yellow} ?? ${Reset}]  ${1:-} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine} [${Yellow} ?? ${Reset}]  ${1:-} \\n"
 }
 export sh_user
 
@@ -164,12 +174,13 @@ export sh_yesno
 # ------------------------------------------------------------------------------
 
 sh_msg () {
-  printf "${ClearNewLine}\n❯❯❯ ${1:-} \n"
+  # shellcheck disable=SC2059
+  printf "${ClearNewLine}\\n❯❯❯ ${1:-} \\n"
 }
 export sh_msg
 
 sh_start () {
-  echo "$(date +%s)"
+  date +%s
 }
 export sh_start
 
@@ -185,7 +196,7 @@ sh_end () {
     fi
     msg="runtime: ${runtime}"
   fi
-  sh_msg "${msg}\n\n"
+  sh_msg "${msg}\\n\\n"
 }
 export sh_end
 

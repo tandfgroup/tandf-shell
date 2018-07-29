@@ -4,6 +4,11 @@
 
 dataurl () {
 
+  if [[ -z "${1:-}" ]]; then
+    echo "ERROR: No file specified."
+    return 1
+  fi
+
   local mimeType=
 
   mimeType=$(file -b --mime-type "${1:-}")

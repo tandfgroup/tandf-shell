@@ -4,6 +4,7 @@
 
 docker_kill_all () {
 
+  # shellcheck disable=SC2046
   [[ "$(docker ps -q)" ]] && docker kill $(docker ps -q) < /dev/null 2> /dev/null
 
   docker ps -a

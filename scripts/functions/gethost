@@ -15,7 +15,7 @@ gethost () {
   local domain="${1}"
   local DNS="${2}"
 
-  ip=`dig +short $domain $DNS`
+  ip=$(dig +short "$domain" "$DNS")
   local ip
 
   if [ -n "$ip" ]; then

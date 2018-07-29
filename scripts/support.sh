@@ -23,16 +23,16 @@ export TFSHELL_SUPPORT
 # LOAD DEPENDECIES
 
 # shellcheck disable=SC1090,SC1091
-. $TFSHELL_SCRIPTS/response.sh
+. "$TFSHELL_SCRIPTS/response.sh"
 
 # shellcheck disable=SC1090,SC1091
-. $TFSHELL_SCRIPTS/functions.sh
+. "$TFSHELL_SCRIPTS/functions.sh"
 
 # ------------------------------------------------------------------------------
 
 # OS SPEC VARIABLES
 
-type "lowercase" &> /dev/null && [[ -z "${UTYPE:-}" ]] && UTYPE=$(lowercase ${OSTYPE:-}) && export UTYPE
+type "lowercase" &> /dev/null && [[ -z "${UTYPE:-}" ]] && UTYPE=$(lowercase "${OSTYPE:-}") && export UTYPE
 type "lowercase" &> /dev/null && [[ -z "${UNAME:-}" ]] && UNAME=$(lowercase "$(uname)") && export UNAME
 [[ -z "${UTYPE:-}" ]] && UTYPE=$(${OSTYPE:-}) && export UTYPE
 [[ -z "${UNAME:-}" ]] && UNAME=$(uname) && export UNAME
@@ -71,8 +71,8 @@ file_find_key_replace () {
   var_value="${3:-}"
   output_file="${4}" || "$input_file"
   if type "sed" &> /dev/null; then
-    output=$(sed -e 's|'"$var_key"'|'"$var_value"'|g' $input_file)
-    echo "$output" > $output_file
+    output=$(sed -e 's|'"$var_key"'|'"$var_value"'|g' "$input_file")
+    echo "$output" > "$output_file"
   fi
 }
 export file_find_key_replace
@@ -100,15 +100,16 @@ file_find_keys_replace () {
     sh_error "arg[2] - Input file name/path is required"
     exit 2
   else
-    output=$(cat $input_file)
+    output=$(cat "$input_file")
     for var in "${var_keys[@]}"; do
       if [[ ! -z ${var+x} ]] && type "sed" &> /dev/null; then
+        # shellcheck disable=SC2001
         output=$(echo "$output" | sed -e 's|'"{{${var}}}"'|'"${!var:-}"'|g')
       fi
     done
   fi
   [[ -z "${output_file}" ]] && output_file="$input_file"
-  echo "$output" > $output_file
+  echo "$output" > "$output_file"
 }
 export file_find_keys_replace
 
@@ -132,6 +133,7 @@ get_env_var () {
 
   if [[ ! -z "${prefixvar}" ]]; then
     prefixvar="${prefixvar}${var_name}"
+    # shellcheck disable=SC2086
     eval prefixvar=\$$prefixvar
     [[ ! -z "${prefixvar}" ]] && declare "$var_name"="${prefixvar}"
   fi
@@ -216,7 +218,7 @@ require_bin () {
     if [[ "${bin: -4}" = "perl" ]]; then
       binVersion="$(${bin} -e 'print $^V;')"
     elif [[ "${bin: -6}" = "semver" ]]; then
-      binVersion="$(npm info ${bin: -6} version)"
+      binVersion="$(npm info "${bin: -6}" version)"
     else
       binVersion="$(${bin} --version || true)"
     fi

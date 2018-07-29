@@ -5,10 +5,13 @@
 docker_rmi_all () {
 
   # 1. Kill all running containers
+  # shellcheck disable=SC2046
   [[ "$(docker ps -q)" ]] && docker kill $(docker ps -q) < /dev/null 2> /dev/null
   # 2. Remove all containers
+  # shellcheck disable=SC2046
   [[ "$(docker ps -a -q)" ]] && docker rm $(docker ps -a -q) --force < /dev/null 2> /dev/null
   # 3. Remove all images
+  # shellcheck disable=SC2046
   [[ "$(docker images -a -q)" ]] && docker rmi $(docker images -a -q) --force < /dev/null 2> /dev/null
 
   docker images

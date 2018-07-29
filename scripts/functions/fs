@@ -10,9 +10,11 @@ fs () {
     arg=-sbh
   fi
 
+  # shellcheck disable=SC2199
   if [[ -n "$@" ]]; then
     du $arg -- "$@"
   else
+    # shellcheck disable=SC2035
     du $arg .[^.]* *
   fi
 
