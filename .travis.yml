@@ -40,10 +40,10 @@ jobs:
     - name: 'Unit Tests'
       script: ./run --test
     - stage: after
-      name: 'Greenkeeper lockfile upload'
+      name: 'Upload Report(s)'
+      script: ./run --report
+    - name: 'Greenkeeper lockfile upload'
       script: greenkeeper-lockfile-upload
     - stage: deploy
       name: 'Publish'
-      script:
-        - ./run --publish
-        - ./run --report
+      script: ./run --publish
