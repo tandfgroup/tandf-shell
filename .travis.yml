@@ -37,12 +37,10 @@ jobs:
     - stage: test
       name: 'Lint Analysis'
       script: ./run --lint
-    - name: 'Unit Tests'
-      script: ./run --test
+    - name: 'Testing and Reporting'
+      script: ./run --test --report
     - stage: after
-      name: 'Upload Report(s)'
-      script: ./run --report
-    - name: 'Greenkeeper lockfile upload'
+      name: 'Greenkeeper lockfile upload'
       script: greenkeeper-lockfile-upload
     - stage: deploy
       name: 'Publish'
