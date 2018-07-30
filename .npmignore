@@ -8,6 +8,10 @@
 /docs
 /e2e
 /tests
+commitlint.config.js
+Dockerfile
+Dockerfile.test
 logs
 package-lock.json
+run
 yarn.lock
