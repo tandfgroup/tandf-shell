@@ -20,7 +20,7 @@
   run type sh_end
   [ "$status" -eq 0 ]
   run echo $(sh_end "$(sh_start)")
-  [[ "$output" = *"runtime: 0:00"* ]]
+  [[ "$output" = *"runtime: 0:0"* ]]
 }
 
 @test "'sh_error' should exist and work as expected" {
