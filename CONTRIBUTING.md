@@ -65,7 +65,7 @@ yarn install
 
 - Linting is performed using [ShellCheck](https://github.com/koalaman/shellcheck). Learn more about '[How to use ShellCheck](https://github.com/koalaman/shellcheck#how-to-use)'.
 - All tests are written using [Bats](https://github.com/bats-core/bats-core). Learn more about '[Writing Tests in Bats docs](https://github.com/bats-core/bats-core#writing-tests)'.
-- Code coverage is generated using [kcov](https://github.com/SimonKagstrom/kcov). Reports are generated at `file://.../tandf-shell/coverage/bats/index.html` and published to [codecov.io]((https://codecov.io/) at [codecov.io/gh/tandfgroup/tandf-shell](https://codecov.io/gh/tandfgroup/tandf-shell)
+- Code coverage is generated using [kcov](https://github.com/SimonKagstrom/kcov). Reports are generated at `file://.../tandf-shell/coverage/bats/index.html` and published to [codecov.io](https://codecov.io/) at [codecov.io/gh/tandfgroup/tandf-shell](https://codecov.io/gh/tandfgroup/tandf-shell)
 
 ---
 
