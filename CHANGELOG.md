@@ -1,3 +1,13 @@
+CHANGELOG
+
+## [1.6.3](https://github.com/tandfgroup/tandf-shell/compare/v1.6.2...v1.6.3) (2018-08-05)
+
+
+### Bug Fixes
+
+* add title to changelog ([5ef14fd](https://github.com/tandfgroup/tandf-shell/commit/5ef14fd))
+* backfill changelog history ([aeca7bc](https://github.com/tandfgroup/tandf-shell/commit/aeca7bc))
+
 # CHANGELOG
 
 
@@ -123,4 +133,3 @@
 
 * add semantic-release dependency, update package version and author ([1e2f1e7](https://github.com/tandfgroup/tandf-shell/commit/1e2f1e7))
 * add travis-ci config ([ad7619e](https://github.com/tandfgroup/tandf-shell/commit/ad7619e))
-
