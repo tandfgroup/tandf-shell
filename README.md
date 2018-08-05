@@ -2,7 +2,7 @@
 
 > T&F Shell is for the efficient storage and management of shell scripts.
 
-[![Build Status](https://travis-ci.org/tandfgroup/tandf-shell.svg?branch=master)](https://travis-ci.org/tandfgroup/tandf-shell) [![codecov](https://codecov.io/gh/tandfgroup/tandf-shell/branch/master/graph/badge.svg)](https://codecov.io/gh/tandfgroup/tandf-shell) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release) [![Greenkeeper badge](https://badges.greenkeeper.io/tandfgroup/tandf-shell.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/tandfgroup/tandf-shell.svg?branch=master)](https://travis-ci.org/tandfgroup/tandf-shell) [![codecov](https://codecov.io/gh/tandfgroup/tandf-shell/branch/master/graph/badge.svg)](https://codecov.io/gh/tandfgroup/tandf-shell) [![Greenkeeper badge](https://badges.greenkeeper.io/tandfgroup/tandf-shell.svg)](https://greenkeeper.io/) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 [![npm latest version](https://img.shields.io/npm/v/tandf-shell/latest.svg)](https://www.npmjs.com/package/tandf-shell) [![npm next version](https://img.shields.io/npm/v/tandf-shell/next.svg)](https://www.npmjs.com/package/tandf-shell) [![npm downloads per week](https://img.shields.io/npm/dw/tandf-shell.svg)](https://www.npmjs.com/package/tandf-shell) [![npm total downloads](https://img.shields.io/npm/dt/tandf-shell.svg)](https://www.npmjs.com/package/tandf-shell)
 
