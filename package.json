@@ -1,7 +1,7 @@
 {
   "name": "tandf-shell",
   "description": "T&F Shell is for the efficient storage and management of shell scripts",
-  "version": "0.0.0-development",
+  "version": "1.6.2",
   "author": "T&F Group Technology",
   "license": "Apache-2.0",
   "homepage": "https://github.com/tandfgroup/tandf-shell",
