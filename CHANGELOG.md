@@ -1,3 +1,12 @@
+# CHANGELOG
+
+## [1.6.4](https://github.com/tandfgroup/tandf-shell/compare/v1.6.3...v1.6.4) (2018-08-05)
+
+
+### Bug Fixes
+
+* resolve changelog header issue ([87e955b](https://github.com/tandfgroup/tandf-shell/commit/87e955b))
+
 ## [1.6.3](https://github.com/tandfgroup/tandf-shell/compare/v1.6.2...v1.6.3) (2018-08-05)
 
 
