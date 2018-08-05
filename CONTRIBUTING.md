@@ -15,6 +15,7 @@
 ## Guidelines <a id="guidelines"></a>
 
 As a contributor, here are the guidelines we would like you to follow:
+
 - [Code of conduct](https://github.com/tandfgroup/engineering/blob/master/CODE_OF_CONDUCT.md)
 - [How can I contribute?](https://github.com/tandfgroup/engineering/blob/master/CONTRIBUTING.md#how-can-i-contribute)
 - [Using the issue tracker](https://github.com/tandfgroup/engineering/blob/master/CONTRIBUTING.md#using-the-issue-tracker)
@@ -52,6 +53,7 @@ git clone https://github.com/tandfgroup/tandf-shell.git tandf-shell && cd tandf-
 ```
 
 ## Install Dependencies <a id="install-dependencies"></a>
+
 ```bash
 # Using NPM:
 npm install
@@ -63,12 +65,13 @@ yarn install
 
 - Linting is performed using [ShellCheck](https://github.com/koalaman/shellcheck). Learn more about '[How to use ShellCheck](https://github.com/koalaman/shellcheck#how-to-use)'.
 - All tests are written using [Bats](https://github.com/bats-core/bats-core). Learn more about '[Writing Tests in Bats docs](https://github.com/bats-core/bats-core#writing-tests)'.
-- Code coverage is generated using [kcov](). Reports are generated at `file://.../tandf-shell/coverage/bats/index.html` and published to [codecov.io]((https://codecov.io/) at [codecov.io/gh/tandfgroup/tandf-shell](https://codecov.io/gh/tandfgroup/tandf-shell)
+- Code coverage is generated using [kcov](https://github.com/SimonKagstrom/kcov). Reports are generated at `file://.../tandf-shell/coverage/bats/index.html` and published to [codecov.io]((https://codecov.io/) at [codecov.io/gh/tandfgroup/tandf-shell](https://codecov.io/gh/tandfgroup/tandf-shell)
 
 ---
 
 ## File Structure <a id="file-structure"></a>
-```
+
+```text
 tandf-shell/
  ├─ scripts/                   * the directory containing all shell script files
  │   ├─ apps/                  * Apps directory containing app/binary scripts
