@@ -1,5 +1,3 @@
-CHANGELOG
-
 ## [1.6.3](https://github.com/tandfgroup/tandf-shell/compare/v1.6.2...v1.6.3) (2018-08-05)
 
 
@@ -7,8 +5,6 @@ CHANGELOG
 
 * add title to changelog ([5ef14fd](https://github.com/tandfgroup/tandf-shell/commit/5ef14fd))
 * backfill changelog history ([aeca7bc](https://github.com/tandfgroup/tandf-shell/commit/aeca7bc))
-
-# CHANGELOG
 
 
 ## [1.6.2](https://github.com/tandfgroup/tandf-shell/compare/v1.6.1...v1.6.2) (2018-08-05)
