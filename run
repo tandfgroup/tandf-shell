@@ -545,6 +545,10 @@ elif ( $RUN_LINT ); then sh_heading "LINT script started"
 # SCRIPTING GOES HERE:
 # --------------------------------------------------------------------------------------------------
 
+  sh_info "Running markdownlint"
+
+  run_or_fail npm run lint
+
   sh_info "Running linter on shell scripts"
 
   docker pull koalaman/shellcheck:stable

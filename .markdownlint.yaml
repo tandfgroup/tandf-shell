@@ -1,4 +1,7 @@
 line-length: false
+first-header-h1: false
+first-heading-h1: false
+first-line-h1: false
 header-increment: false
 heading-increment: false
 no-duplicate-header: false
