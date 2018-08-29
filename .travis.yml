@@ -35,7 +35,7 @@ jobs:
     - name: 'Repository Checks'
       script:
         - commitlint-travis
-        - npm install -g github-label-sync && github-label-sync -l 'https://git.io/fAe5i' tandfgroup/tandf-shell
+        - npm install -g github-label-sync && github-label-sync -a "$GH_TOKEN" -l 'https://git.io/fAe5i' tandfgroup/tandf-shell
     - stage: test
       name: 'Lint Analysis'
       script: ./run --lint
