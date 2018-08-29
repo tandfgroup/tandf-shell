@@ -32,8 +32,10 @@ jobs:
     - stage: before
       name: 'Greenkeeper lockfile update'
       script: greenkeeper-lockfile-update
-    - name: 'Lint commit messages'
-      script: commitlint-travis
+    - name: 'Repository Checks'
+      script:
+        - commitlint-travis
+        - npm install -g github-label-sync && github-label-sync -l 'https://git.io/fAe5i' tandfgroup/tandf-shell
     - stage: test
       name: 'Lint Analysis'
       script: ./run --lint
