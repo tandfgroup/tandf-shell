@@ -107,7 +107,6 @@ tandf-shell/
  │   ├─ support.bats           * tests for Shell support functions
  │   :
  │
- ├─ commitlint.config.js       * commitlint config
  ├─ package-lock.json          * npm dependency lock file
  └─ package.json               * npm package config
 ```
