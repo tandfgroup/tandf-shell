@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [1.6.5](https://github.com/tandfgroup/tandf-shell/compare/v1.6.4...v1.6.5) (2018-08-29)
+
+
+### Bug Fixes
+
+* change syntax in run-cli script ([50b8bdc](https://github.com/tandfgroup/tandf-shell/commit/50b8bdc))
+
 ## [1.6.4](https://github.com/tandfgroup/tandf-shell/compare/v1.6.3...v1.6.4) (2018-08-05)
 
 
