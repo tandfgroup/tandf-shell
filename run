@@ -470,14 +470,14 @@ elif ( $RUN_CLEAN ); then sh_heading "CLEAN script started"
 # --------------------------------------------------------------------------------------------------
 
   sh_info "Removing all auto-generated directories"
-  (
+  {
     rm -rf \
       coverage \
       dist \
       doc \
       node_modules \
       "$TEMP_BUILD_PATH"
-  ) < /dev/null 2> /dev/null
+  } < /dev/null 2> /dev/null
 
   sh_info "Cleaning cache(s)"
   npm cache clean -g -f < /dev/null 2> /dev/null
