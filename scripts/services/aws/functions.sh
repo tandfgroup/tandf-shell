@@ -25,7 +25,7 @@ aws_docker_login () {
   # TODO: The horrible sed hack removes the "-e" parameter from the docker login command.
   # Later versions of the AWS CLI (>=1.11.91) support --no-include-email on the get-login command.
   DOCKER_LOGIN=$(aws ecr get-login --region ${AWS_REGION} | sed 's/-e none //')
-  if [[ ! -z "${USE_SUDO}" ]]; then
+  if [[ -n "${USE_SUDO}" ]]; then
     require_bin "docker" && run_or_fail sudo "$DOCKER_LOGIN"
   else
     require_bin "docker" && run_or_fail "$DOCKER_LOGIN"
@@ -54,10 +54,10 @@ aws_docker_push () {
   USE_SUDO="${3:-}"
 
   sh_info "Pushing Docker image \`${AWS_ECR_IMAGE_URL}\` to AWS ECR..."
-  
+
   aws_docker_login "$AWS_REGION" "$USE_SUDO"
 
-  if [[ ! -z "${USE_SUDO}" ]]; then
+  if [[ -n "${USE_SUDO}" ]]; then
     require_bin "docker" && run_or_fail sudo docker push "${AWS_ECR_IMAGE_URL}"
   else
     require_bin "docker" && run_or_fail docker push "${AWS_ECR_IMAGE_URL}"
@@ -231,7 +231,7 @@ aws_ecr_url () {
 
   AWS_ECR_URL=""
 
-  if [ ! -z "$AWS_ACCOUNT_ID" ] && [ ! -z "$AWS_ECR_IMAGE_NAME" ]; then
+  if [ -n "$AWS_ACCOUNT_ID" ] && [ -n "$AWS_ECR_IMAGE_NAME" ]; then
     AWS_ECR_HOST="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
     AWS_ECR_URL="$AWS_ECR_HOST/$AWS_ECR_IMAGE_NAME:$AWS_ECR_IMAGE_TAG"
   fi

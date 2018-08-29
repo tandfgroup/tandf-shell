@@ -187,7 +187,7 @@ export sh_start
 sh_end () {
   end=$(date +%s)
   msg=""
-  if [[ ! -z "${1:-}" ]]; then
+  if [[ -n "${1:-}" ]]; then
     runlen=$(echo "$end - ${1}" | bc)
     if type "python" &> /dev/null; then
       runtime=$(python -c "print '%u:%02u' % ($runlen/60, $runlen%60)")

@@ -102,7 +102,7 @@ file_find_keys_replace () {
   else
     output=$(cat "$input_file")
     for var in "${var_keys[@]}"; do
-      if [[ ! -z ${var+x} ]] && type "sed" &> /dev/null; then
+      if [[ -n ${var+x} ]] && type "sed" &> /dev/null; then
         # shellcheck disable=SC2001
         output=$(echo "$output" | sed -e 's|'"{{${var}}}"'|'"${!var:-}"'|g')
       fi
@@ -131,14 +131,14 @@ get_env_var () {
   prefixvar="${3:-}"
   declare "$var_name"="${var_value}"
 
-  if [[ ! -z "${prefixvar}" ]]; then
+  if [[ -n "${prefixvar}" ]]; then
     prefixvar="${prefixvar}${var_name}"
     # shellcheck disable=SC2086
     eval prefixvar=\$$prefixvar
-    [[ ! -z "${prefixvar}" ]] && declare "$var_name"="${prefixvar}"
+    [[ -n "${prefixvar}" ]] && declare "$var_name"="${prefixvar}"
   fi
 
-  [[ -z "${!var_name}" ]] && [[ ! -z ${var_default+x} ]] && declare "$var_name"="${var_default}"
+  [[ -z "${!var_name}" ]] && [[ -n ${var_default+x} ]] && declare "$var_name"="${var_default}"
 
   echo "${!var_name}"
 }
@@ -152,7 +152,7 @@ export get_env_var
 #   Variable keys+values
 #######################################
 output_vars () {
-  if [[ ! -z "${1:-}" ]]; then
+  if [[ -n "${1:-}" ]]; then
     for var in "$@"; do
       echo "${var}=\"${!var}\""
     done
@@ -168,7 +168,7 @@ export output_vars
 #   Stringified JSON object with variable keys+values
 #######################################
 output_vars_json () {
-  if [[ ! -z "${1:-}" ]]; then
+  if [[ -n "${1:-}" ]]; then
     echo "{"
     for var in "$@"; do
       echo "  \"${var}\": \"${!var}\""
