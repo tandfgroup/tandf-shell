@@ -4,14 +4,9 @@
   "version": "1.6.5",
   "author": "T&F Group Technology",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/tandfgroup/tandf-shell",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tandfgroup/tandf-shell.git"
-  },
-  "bugs": {
-    "url": "https://github.com/tandfgroup/tandf-shell/issues"
-  },
+  "homepage": "https://github.com/tandfgroup/tandf-shell#readme",
+  "repository": "github:tandfgroup/tandf-shell",
+  "bugs": "https://github.com/tandfgroup/tandf-shell/issues",
   "scripts": {
     "lint:md": "npm run markdownlint -- -i 'node_modules/' -c '.markdownlint.yaml' './'",
     "lint": "npm run lint:md",
