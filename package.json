@@ -13,7 +13,6 @@
     "url": "https://github.com/tandfgroup/tandf-shell/issues"
   },
   "scripts": {
-    "commitmsg": "commitlint -E GIT_PARAMS",
     "lint:md": "npm run markdownlint -- -i 'node_modules/' -c '.markdownlint.yaml' './'",
     "lint": "npm run lint:md",
     "markdownlint": "markdownlint",
@@ -25,7 +24,7 @@
     "@commitlint/travis-cli": "^7.0.0",
     "@semantic-release/changelog": "^3.0.0",
     "@semantic-release/git": "^7.0.1",
-    "husky": "^0.14.3",
+    "husky": "^1.0.0",
     "markdownlint-cli": "^0.13.0",
     "semantic-release": "^15.9.5"
   },
@@ -33,6 +32,11 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "release": {
     "verifyConditions": [
