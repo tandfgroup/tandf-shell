@@ -32,12 +32,12 @@ jobs:
     - stage: test
       name: 'Checks and Tests'
       script:
-        - greenkeeper-lockfile-update
+        - '[[ $TRAVIS_BRANCH =~ ^greenkeeper.*$ ]] && greenkeeper-lockfile-update || echo "Skipping greenkeeper-lockfile-update";'
         - commitlint-travis
         - travis_retry github-label-sync -a "$GH_TOKEN" -l 'https://git.io/fAe5i' tandfgroup/tandf-shell
         - ./run --lint
         - ./run --test --report
-        - greenkeeper-lockfile-upload
+        - '[[ $TRAVIS_BRANCH =~ ^greenkeeper.*$ ]] && greenkeeper-lockfile-upload || echo "Skipping greenkeeper-lockfile-upload";'
     - stage: deploy
       name: 'Publish and Release'
       script: ./run --publish
